@@ -5,6 +5,8 @@ const express = require('express');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const db = require('../models/database');
+const fs = require('fs');
+const path = require('path');
 
 // GET all projects
 router.get('/', (req, res) => {
@@ -83,6 +85,19 @@ router.put('/:id', (req, res) => {
 // DELETE project
 router.delete('/:id', (req, res) => {
   try {
+    // delete photo files from disk first
+    const photos = db.findAll('photos', { project_id: req.params.id });
+    for (const photo of photos) {
+      try {
+        if (photo && photo.filepath) {
+          const fullPath = path.join(__dirname, '..', '..', photo.filepath);
+          if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
+        }
+      } catch (e) {
+        // log and continue
+        console.warn('Failed to remove photo file', photo && photo.filepath, e.message);
+      }
+    }
     db.remove('photos', { project_id: req.params.id });
     db.remove('survey_points', { project_id: req.params.id });
     db.remove('property_boundaries', { project_id: req.params.id });
