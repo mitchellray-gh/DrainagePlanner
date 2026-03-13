@@ -107,6 +107,40 @@ function populateProjectForm(p) {
   document.getElementById('proj-rainfall').value = p.avg_annual_rainfall_in || '';
   document.getElementById('proj-climate').value = p.climate_zone || '';
   document.getElementById('proj-notes').value = p.notes || '';
+  // show delete button when a project is loaded
+  const delBtn = document.getElementById('proj-delete-btn');
+  if (delBtn) {
+    delBtn.style.display = p && p.id ? 'inline-block' : 'none';
+    delBtn.onclick = () => deleteProject();
+  }
+}
+
+async function deleteProject() {
+  if (!currentProject || !currentProject.id) return showNotification('No project selected', 'error');
+  const ok = confirm(`Delete project "${currentProject.name}" and ALL associated data (photos, survey points, plans)? This cannot be undone.`);
+  if (!ok) return;
+
+  try {
+    const res = await fetch(`${API}/api/projects/${currentProject.id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (data.success) {
+      showNotification('Project deleted', 'success');
+      // clear current project and UI
+      currentProject = null;
+      currentPlan = null;
+      document.getElementById('project-form').reset();
+      document.getElementById('photos-grid').innerHTML = '';
+      document.getElementById('survey-points-table').querySelector('tbody').innerHTML = '';
+      document.getElementById('proj-delete-btn').style.display = 'none';
+      // reload project list and go to dashboard
+      await loadProjects();
+      showPanel('dashboard');
+    } else {
+      showNotification('Delete failed: ' + (data.error || 'unknown'), 'error');
+    }
+  } catch (err) {
+    showNotification('Delete error: ' + err.message, 'error');
+  }
 }
 
 document.getElementById('project-form').addEventListener('submit', async (e) => {
