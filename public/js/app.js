@@ -116,31 +116,100 @@ function populateProjectForm(p) {
 }
 
 async function deleteProject() {
-  if (!currentProject || !currentProject.id) return showNotification('No project selected', 'error');
-  const ok = confirm(`Delete project "${currentProject.name}" and ALL associated data (photos, survey points, plans)? This cannot be undone.`);
-  if (!ok) return;
+  // show modal confirmation instead of immediate delete
+  showDeleteModal();
+}
 
-  try {
-    const res = await fetch(`${API}/api/projects/${currentProject.id}`, { method: 'DELETE' });
-    const data = await res.json();
-    if (data.success) {
-      showNotification('Project deleted', 'success');
-      // clear current project and UI
-      currentProject = null;
-      currentPlan = null;
-      document.getElementById('project-form').reset();
-      document.getElementById('photos-grid').innerHTML = '';
-      document.getElementById('survey-points-table').querySelector('tbody').innerHTML = '';
-      document.getElementById('proj-delete-btn').style.display = 'none';
-      // reload project list and go to dashboard
-      await loadProjects();
-      showPanel('dashboard');
-    } else {
-      showNotification('Delete failed: ' + (data.error || 'unknown'), 'error');
-    }
-  } catch (err) {
-    showNotification('Delete error: ' + err.message, 'error');
+function showDeleteModal() {
+  const modal = document.getElementById('proj-delete-modal');
+  const nameEl = document.getElementById('modal-proj-name');
+  const input = document.getElementById('modal-confirm-input');
+  const trashBtn = document.getElementById('modal-trash-btn');
+  const hardBtn = document.getElementById('modal-hard-btn');
+  if (!modal || !currentProject) return showNotification('No project selected', 'error');
+  nameEl.textContent = currentProject.name;
+  input.value = '';
+  trashBtn.disabled = true;
+  hardBtn.disabled = true;
+  modal.style.display = 'block';
+
+  input.focus();
+
+  function onInput() {
+    const matches = input.value.trim() === currentProject.name;
+    trashBtn.disabled = !matches;
+    hardBtn.disabled = !matches;
   }
+
+  input.removeEventListener('input', onInput);
+  input.addEventListener('input', onInput);
+
+  trashBtn.onclick = async () => {
+    try {
+      // soft-delete
+      const res = await fetch(`${API}/api/projects/${currentProject.id}/trash`, { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        closeDeleteModal();
+        // clear UI
+        currentProject = null;
+        currentPlan = null;
+        document.getElementById('project-form').reset();
+        document.getElementById('photos-grid').innerHTML = '';
+        document.getElementById('survey-points-table').querySelector('tbody').innerHTML = '';
+        document.getElementById('proj-delete-btn').style.display = 'none';
+        await loadProjects();
+        showPanel('dashboard');
+        // show undo notification
+        showNotification('Project moved to Trash', 'success', {
+          timeout: 10000,
+          actionLabel: 'Undo',
+          action: async () => {
+            try {
+              await fetch(`${API}/api/projects/${data.project.id}/restore`, { method: 'POST' });
+              await loadProjects();
+              showNotification('Project restored', 'success');
+            } catch (e) {
+              showNotification('Restore failed: ' + e.message, 'error');
+            }
+          }
+        });
+      } else {
+        showNotification('Trash failed: ' + (data.error || 'unknown'), 'error');
+      }
+    } catch (err) {
+      showNotification('Trash error: ' + err.message, 'error');
+    }
+  };
+
+  hardBtn.onclick = async () => {
+    if (!confirm('This will permanently delete the project and all associated files. Proceed?')) return;
+    try {
+      const res = await fetch(`${API}/api/projects/${currentProject.id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        closeDeleteModal();
+        currentProject = null;
+        currentPlan = null;
+        document.getElementById('project-form').reset();
+        document.getElementById('photos-grid').innerHTML = '';
+        document.getElementById('survey-points-table').querySelector('tbody').innerHTML = '';
+        document.getElementById('proj-delete-btn').style.display = 'none';
+        await loadProjects();
+        showPanel('dashboard');
+        showNotification('Project permanently deleted', 'success');
+      } else {
+        showNotification('Delete failed: ' + (data.error || 'unknown'), 'error');
+      }
+    } catch (err) {
+      showNotification('Delete error: ' + err.message, 'error');
+    }
+  };
+}
+
+function closeDeleteModal() {
+  const modal = document.getElementById('proj-delete-modal');
+  if (modal) modal.style.display = 'none';
 }
 
 document.getElementById('project-form').addEventListener('submit', async (e) => {
@@ -918,7 +987,9 @@ function escHtml(str) {
   return div.innerHTML;
 }
 
-function showNotification(message, type = 'info') {
+function showNotification(message, type = 'info', options = {}) {
+  // options: { timeout: ms, actionLabel: string, action: fn }
+  const { timeout = 3500, actionLabel = null, action = null } = options;
   const existing = document.querySelector('.notification');
   if (existing) existing.remove();
 
@@ -927,15 +998,33 @@ function showNotification(message, type = 'info') {
   el.className = 'notification';
   el.style.cssText = `
     position: fixed; top: 1rem; right: 1rem; z-index: 9999;
-    padding: 0.75rem 1.25rem; border-radius: 8px;
+    padding: 0.75rem 1.25rem; border-radius: 8px; display:flex;align-items:center;gap:0.5rem;
     background: ${colors[type] || colors.info}; color: #fff;
     font-weight: 600; font-size: 0.9rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     animation: fadeIn 0.2s ease;
   `;
-  el.textContent = message;
+  const msg = document.createElement('div');
+  msg.textContent = message;
+  el.appendChild(msg);
+
+  if (actionLabel && typeof action === 'function') {
+    const btn = document.createElement('button');
+    btn.textContent = actionLabel;
+    btn.style.cssText = 'margin-left:0.5rem;padding:0.35rem 0.6rem;border-radius:6px;border:none;background:rgba(255,255,255,0.12);color:#fff;font-weight:700;cursor:pointer;';
+    btn.onclick = () => {
+      try {
+        action();
+      } catch (e) {
+        console.error('Notification action error', e);
+      }
+      el.remove();
+    };
+    el.appendChild(btn);
+  }
+
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 3500);
+  if (timeout > 0) setTimeout(() => el.remove(), timeout);
 }
 
 // ─── INIT ────────────────────────────────────────────────────────────

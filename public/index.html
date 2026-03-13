@@ -84,6 +84,22 @@
         </div>
       </div>
 
+      <!-- Delete confirmation modal -->
+      <div id="proj-delete-modal" class="modal" style="display:none;">
+        <div class="modal-backdrop" onclick="closeDeleteModal()" style="position:fixed;inset:0;background:rgba(0,0,0,0.35);"></div>
+        <div class="modal-body" style="position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;padding:1.25rem;border-radius:8px;max-width:420px;width:90%;z-index:10001;box-shadow:0 8px 30px rgba(2,6,23,0.2);">
+          <h3 style="margin-top:0;margin-bottom:0.5rem;">Confirm deletion</h3>
+          <p style="margin-top:0;margin-bottom:0.75rem;color:#334155;">To confirm moving this project to the Trash, type the project name below. You can undo this action within a short time from the notification.</p>
+          <div style="margin-bottom:0.5rem;">Project: <strong id="modal-proj-name"></strong></div>
+          <input id="modal-confirm-input" type="text" placeholder="Type project name to confirm" style="width:100%;padding:0.5rem;border:1px solid #cbd5e1;border-radius:6px;margin-bottom:0.75rem;">
+          <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
+            <button class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+            <button id="modal-trash-btn" class="btn" style="background:#f59e0b;color:#fff;border-radius:6px;border:none;" disabled>Move to Trash</button>
+            <button id="modal-hard-btn" class="btn btn-danger" style="margin-left:0.25rem;" disabled>Delete Permanently</button>
+          </div>
+        </div>
+      </div>
+
       <form id="project-form" class="form-grid">
         <div class="form-group full-width">
           <label for="proj-name">Project Name *</label>

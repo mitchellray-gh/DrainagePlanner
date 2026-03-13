@@ -11,7 +11,8 @@ const path = require('path');
 // GET all projects
 router.get('/', (req, res) => {
   try {
-    const projects = db.findAll('projects').sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+    // by default exclude soft-deleted projects
+    const projects = db.findAll('projects').filter(p => !p.deleted).sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
     const enriched = projects.map(p => ({
       ...p,
       photo_count: db.count('photos', { project_id: p.id }),
@@ -106,6 +107,32 @@ router.delete('/:id', (req, res) => {
     db.remove('water_flow_analysis', { project_id: req.params.id });
     db.removeById('projects', req.params.id);
     res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// SOFT TRASH — move project to trash (undoable)
+router.post('/:id/trash', (req, res) => {
+  try {
+    const id = req.params.id;
+    const project = db.findById('projects', id);
+    if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
+    const updated = db.update('projects', id, { deleted: true, deleted_at: new Date().toISOString() });
+    res.json({ success: true, project: updated });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// RESTORE from trash
+router.post('/:id/restore', (req, res) => {
+  try {
+    const id = req.params.id;
+    const project = db.findById('projects', id);
+    if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
+    const updated = db.update('projects', id, { deleted: false, deleted_at: null });
+    res.json({ success: true, project: updated });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
