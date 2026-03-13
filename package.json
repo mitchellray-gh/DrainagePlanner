@@ -1,0 +1,19 @@
+{
+  "name": "drainage-planner",
+  "version": "1.0.0",
+  "description": "Expert Yard Drainage Planning System — Construction Manager + Land Surveyor + Landscaping Specialist",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.0",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

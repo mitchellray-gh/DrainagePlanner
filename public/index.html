@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DrainagePlanner Pro — Expert Yard Drainage Planning</title>
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🌧️</span>
+      <div>
+        <div class="brand-name">DrainagePlanner</div>
+        <div class="brand-sub">Pro v1.0</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" data-panel="dashboard"><span class="nav-icon">📊</span> Dashboard</button>
+      <button class="nav-btn" data-panel="project"><span class="nav-icon">📋</span> Project Setup</button>
+      <button class="nav-btn" data-panel="survey"><span class="nav-icon">📐</span> Survey & Topo</button>
+      <button class="nav-btn" data-panel="photos"><span class="nav-icon">📸</span> Site Photos</button>
+      <button class="nav-btn" data-panel="analysis"><span class="nav-icon">🔬</span> Analysis</button>
+      <button class="nav-btn" data-panel="plan"><span class="nav-icon">🗺️</span> Drainage Plan</button>
+      <button class="nav-btn" data-panel="landscape"><span class="nav-icon">🌿</span> Landscaping</button>
+      <button class="nav-btn" data-panel="report"><span class="nav-icon">📄</span> Report</button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="expertise-badges">
+        <span class="exp-badge" title="Construction Management">🏗️ CM</span>
+        <span class="exp-badge" title="Land Surveyor">📐 LS</span>
+        <span class="exp-badge" title="Landscaping Specialist">🌿 LA</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <section class="panel active" id="panel-dashboard">
+      <div class="panel-header">
+        <h1>Dashboard</h1>
+        <button class="btn btn-primary" onclick="showPanel('project')">+ New Project</button>
+      </div>
+
+      <div id="no-projects" class="empty-state">
+        <div class="empty-icon">🌧️</div>
+        <h2>Welcome to DrainagePlanner Pro</h2>
+        <p>Expert yard drainage planning powered by three disciplines:</p>
+        <div class="expertise-cards">
+          <div class="exp-card">
+            <div class="exp-card-icon">🏗️</div>
+            <h3>Construction Manager</h3>
+            <p>Pipe sizing, flow calculations, grading specs, materials & cost estimation, code compliance (IRC/IBC)</p>
+          </div>
+          <div class="exp-card">
+            <div class="exp-card-icon">📐</div>
+            <h3>Land Surveyor</h3>
+            <p>Elevation mapping, slope analysis, contour generation, flow path modeling, cut/fill calculations</p>
+          </div>
+          <div class="exp-card">
+            <div class="exp-card-icon">🌿</div>
+            <h3>Landscaping Specialist</h3>
+            <p>Rain gardens, bioswales, dry creek beds, native plant palettes, erosion control, permeable hardscapes</p>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-lg" onclick="showPanel('project')">Create Your First Project →</button>
+      </div>
+
+      <div id="projects-list" class="projects-grid" style="display:none;"></div>
+    </section>
+
+    <!-- ═══ PROJECT SETUP ═══ -->
+    <section class="panel" id="panel-project">
+      <div class="panel-header">
+        <h1>Project Setup</h1>
+      </div>
+
+      <form id="project-form" class="form-grid">
+        <div class="form-group full-width">
+          <label for="proj-name">Project Name *</label>
+          <input type="text" id="proj-name" placeholder="e.g., Smith Residence Drainage" required>
+        </div>
+        <div class="form-group full-width">
+          <label for="proj-address">Property Address</label>
+          <input type="text" id="proj-address" placeholder="123 Main St, City, State ZIP">
+        </div>
+        <div class="form-group">
+          <label for="proj-lat">Latitude</label>
+          <input type="number" id="proj-lat" step="any" placeholder="e.g., 35.2271">
+          <small>Click map or use GPS</small>
+        </div>
+        <div class="form-group">
+          <label for="proj-lng">Longitude</label>
+          <input type="number" id="proj-lng" step="any" placeholder="e.g., -80.8431">
+        </div>
+        <div class="form-group">
+          <label for="proj-area">Property Area (sq ft)</label>
+          <input type="number" id="proj-area" placeholder="e.g., 15000">
+          <small>Draw on map to calculate</small>
+        </div>
+        <div class="form-group">
+          <label for="proj-soil">Soil Type</label>
+          <select id="proj-soil">
+            <option value="unknown">Unknown — Soil Test Recommended</option>
+            <option value="sand">Sand (Hydrologic Group A)</option>
+            <option value="sandy_loam">Sandy Loam (Group A)</option>
+            <option value="loam">Loam (Group B)</option>
+            <option value="silt">Silt (Group B)</option>
+            <option value="silty_clay">Silty Clay (Group C)</option>
+            <option value="clay">Clay (Group D)</option>
+            <option value="heavy_clay">Heavy/Expansive Clay (Group D)</option>
+            <option value="gravel">Gravel/Coarse (Group A)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="proj-rainfall">Avg Annual Rainfall (inches)</label>
+          <input type="number" id="proj-rainfall" step="0.1" placeholder="e.g., 47">
+          <small><a href="https://www.weather.gov" target="_blank">Look up on Weather.gov</a></small>
+        </div>
+        <div class="form-group">
+          <label for="proj-climate">USDA Hardiness Zone</label>
+          <input type="text" id="proj-climate" placeholder="e.g., 7b">
+        </div>
+        <div class="form-group full-width">
+          <label for="proj-notes">Notes & Observations</label>
+          <textarea id="proj-notes" rows="3" placeholder="Describe any water issues, previous flooding, foundation cracks, wet basements, etc."></textarea>
+        </div>
+
+        <div class="form-group full-width">
+          <h3 style="margin-bottom:0.5rem;">Structures on Property</h3>
+          <div id="structures-list" class="structures-list"></div>
+          <button type="button" class="btn btn-outline" onclick="addStructureRow()">+ Add Structure</button>
+        </div>
+
+        <div class="form-actions full-width">
+          <button type="submit" class="btn btn-primary btn-lg">💾 Save Project</button>
+        </div>
+      </form>
+
+      <!-- Map for location picking -->
+      <div class="map-section">
+        <h3>Property Location</h3>
+        <div id="project-map" class="map-container"></div>
+        <small>Click the map to set coordinates. Use the draw tool to outline property boundaries.</small>
+      </div>
+    </section>
+
+    <!-- ═══ SURVEY & TOPOGRAPHY ═══ -->
+    <section class="panel" id="panel-survey">
+      <div class="panel-header">
+        <h1>📐 Survey & Topography</h1>
+        <span class="badge-role">Land Surveyor Module</span>
+      </div>
+
+      <div id="no-project-warning" class="warning-box">
+        ⚠️ Create or select a project first to add survey data.
+      </div>
+
+      <div id="survey-content" style="display:none;">
+        <div class="section-card">
+          <h3>Add Survey Points</h3>
+          <p>Enter elevation readings from your survey, GPS, or estimated points. More points = better analysis.</p>
+          <form id="survey-point-form" class="inline-form">
+            <input type="text" id="sp-label" placeholder="Label (e.g., NW Corner)" required>
+            <input type="number" id="sp-lat" step="any" placeholder="Latitude" required>
+            <input type="number" id="sp-lng" step="any" placeholder="Longitude" required>
+            <input type="number" id="sp-elev" step="0.01" placeholder="Elevation (ft)" required>
+            <select id="sp-type">
+              <option value="ground">Ground</option>
+              <option value="foundation">Foundation</option>
+              <option value="high_point">High Point</option>
+              <option value="low_point">Low Point</option>
+              <option value="drain">Existing Drain</option>
+              <option value="gutter">Gutter/Downspout</option>
+              <option value="property_corner">Property Corner</option>
+            </select>
+            <select id="sp-soil">
+              <option value="">Soil at this point</option>
+              <option value="sand">Sand</option>
+              <option value="sandy_loam">Sandy Loam</option>
+              <option value="loam">Loam</option>
+              <option value="silt">Silt</option>
+              <option value="silty_clay">Silty Clay</option>
+              <option value="clay">Clay</option>
+              <option value="heavy_clay">Heavy Clay</option>
+              <option value="gravel">Gravel</option>
+            </select>
+            <button type="submit" class="btn btn-primary">+ Add Point</button>
+          </form>
+        </div>
+
+        <div id="survey-map" class="map-container" style="height:400px;margin:1rem 0;"></div>
+
+        <div class="section-card">
+          <h3>Survey Points</h3>
+          <table class="data-table" id="survey-points-table">
+            <thead>
+              <tr>
+                <th>Label</th><th>Lat</th><th>Lng</th><th>Elevation</th><th>Type</th><th>Soil</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="section-card">
+          <h3>Slope Analysis</h3>
+          <button class="btn btn-primary" onclick="runSlopeAnalysis()">📐 Calculate Slopes</button>
+          <div id="slope-results"></div>
+        </div>
+
+        <div class="section-card">
+          <h3>Contour Map</h3>
+          <div class="inline-form">
+            <label>Contour Interval (ft):</label>
+            <input type="number" id="contour-interval" value="1" step="0.5" min="0.25">
+            <button class="btn btn-primary" onclick="generateContours()">Generate Contours</button>
+          </div>
+          <div id="contour-results"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SITE PHOTOS ═══ -->
+    <section class="panel" id="panel-photos">
+      <div class="panel-header">
+        <h1>📸 Site Photos</h1>
+      </div>
+
+      <div id="photos-content" style="display:none;">
+        <div class="section-card">
+          <h3>Upload Photos</h3>
+          <p>Upload site photos — GPS coordinates and direction will be extracted from EXIF data if available.</p>
+          <form id="photo-upload-form" enctype="multipart/form-data">
+            <div class="upload-zone" id="upload-zone">
+              <div class="upload-icon">📷</div>
+              <div>Drag & drop photos here or click to browse</div>
+              <div class="upload-hint">Supports JPG, PNG, HEIC, WebP • GPS EXIF data will be extracted</div>
+              <input type="file" id="photo-input" multiple accept="image/*" style="display:none;">
+            </div>
+            <div class="inline-form" style="margin-top:0.5rem;">
+              <select id="photo-type">
+                <option value="site">General Site</option>
+                <option value="problem_area">Problem Area / Ponding</option>
+                <option value="foundation">Foundation</option>
+                <option value="downspout">Downspout/Gutter</option>
+                <option value="slope">Slope/Grade</option>
+                <option value="drain_existing">Existing Drain</option>
+                <option value="structure">Structure</option>
+                <option value="landscape">Landscaping</option>
+              </select>
+              <input type="text" id="photo-desc" placeholder="Description (optional)">
+              <input type="text" id="photo-tags" placeholder="Tags (comma separated)">
+            </div>
+          </form>
+        </div>
+
+        <div class="photos-grid" id="photos-grid"></div>
+      </div>
+    </section>
+
+    <!-- ═══ ANALYSIS ═══ -->
+    <section class="panel" id="panel-analysis">
+      <div class="panel-header">
+        <h1>🔬 Site Analysis</h1>
+        <span class="badge-role">Construction Manager Module</span>
+      </div>
+
+      <div id="analysis-content" style="display:none;">
+        <div class="analysis-actions">
+          <button class="btn btn-primary btn-lg" onclick="runFullAnalysis()">🔬 Run Full Site Analysis</button>
+          <button class="btn btn-outline" onclick="runRunoffCalc()">💧 Runoff Calculator</button>
+          <button class="btn btn-outline" onclick="showSoilInfo()">🪨 Soil Info</button>
+        </div>
+
+        <div id="analysis-results"></div>
+
+        <!-- Runoff Calculator Modal -->
+        <div id="runoff-calc" class="section-card" style="display:none;">
+          <h3>💧 Storm Runoff Calculator</h3>
+          <form id="runoff-form" class="form-grid">
+            <div class="form-group">
+              <label>Rainfall (inches)</label>
+              <input type="number" id="ro-rainfall" step="0.1" value="2">
+            </div>
+            <div class="form-group">
+              <label>Duration (hours)</label>
+              <input type="number" id="ro-duration" step="0.5" value="1">
+            </div>
+            <div class="form-group">
+              <label>Return Period (years)</label>
+              <select id="ro-return">
+                <option value="1">1-Year (Minor)</option>
+                <option value="10" selected>10-Year (Design Standard)</option>
+                <option value="25">25-Year (Major)</option>
+                <option value="100">100-Year (Extreme)</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Calculate Runoff</button>
+            </div>
+          </form>
+          <div id="runoff-results"></div>
+        </div>
+
+        <div id="soil-info-display" class="section-card" style="display:none;"></div>
+      </div>
+    </section>
+
+    <!-- ═══ DRAINAGE PLAN ═══ -->
+    <section class="panel" id="panel-plan">
+      <div class="panel-header">
+        <h1>🗺️ Drainage Plan</h1>
+        <span class="badge-role">Construction Manager Module</span>
+      </div>
+
+      <div id="plan-content" style="display:none;">
+        <div class="plan-actions">
+          <button class="btn btn-primary btn-lg" onclick="generatePlan()">⚡ Generate Drainage Plan</button>
+        </div>
+
+        <div id="plan-results"></div>
+      </div>
+    </section>
+
+    <!-- ═══ LANDSCAPING ═══ -->
+    <section class="panel" id="panel-landscape">
+      <div class="panel-header">
+        <h1>🌿 Landscaping Integration</h1>
+        <span class="badge-role">Landscaping Specialist Module</span>
+      </div>
+
+      <div id="landscape-content" style="display:none;">
+        <div id="landscape-results">
+          <div class="empty-state" style="padding:2rem;">
+            <p>Generate a drainage plan first — landscaping recommendations will be included automatically.</p>
+            <button class="btn btn-primary" onclick="showPanel('plan')">Go to Drainage Plan →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ REPORT ═══ -->
+    <section class="panel" id="panel-report">
+      <div class="panel-header">
+        <h1>📄 Drainage Report</h1>
+      </div>
+
+      <div id="report-content" style="display:none;">
+        <div class="report-actions">
+          <button class="btn btn-primary btn-lg" onclick="viewReport()">📄 View Full Report</button>
+          <button class="btn btn-outline" onclick="printReport()">🖨️ Print / Save PDF</button>
+        </div>
+        <div id="report-preview"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

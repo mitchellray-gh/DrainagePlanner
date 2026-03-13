@@ -1,0 +1,2027 @@
+{
+  "projects": [
+    {
+      "id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "name": "Ray Yard",
+      "address": "6610 Hansbrinker",
+      "latitude": 39.382314,
+      "longitude": -84.401495,
+      "property_area_sqft": 9156,
+      "climate_zone": "6b",
+      "avg_annual_rainfall_in": 43,
+      "soil_type": "unknown",
+      "notes": null,
+      "status": "draft",
+      "created_at": "2026-03-13T18:00:09.234Z",
+      "updated_at": "2026-03-13T18:00:09.234Z"
+    }
+  ],
+  "photos": [
+    {
+      "id": "af404dfb-896c-4408-af71-650a57bbcfcb",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "1e7e7092-8418-4e30-9144-a751cdbcc6b3.jpg",
+      "original_name": "IMG_4527.jpg",
+      "filepath": "/uploads/1e7e7092-8418-4e30-9144-a751cdbcc6b3.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.362Z",
+      "updated_at": "2026-03-13T18:02:36.362Z"
+    },
+    {
+      "id": "e8802989-a4ba-4b7e-b408-128855abe4d7",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "75cceb64-c86e-408f-96f3-037e7a95927d.jpg",
+      "original_name": "IMG_4528.jpg",
+      "filepath": "/uploads/75cceb64-c86e-408f-96f3-037e7a95927d.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.363Z",
+      "updated_at": "2026-03-13T18:02:36.363Z"
+    },
+    {
+      "id": "79ffb2ed-efdb-421e-9d1f-0f76f2403000",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "68813569-ff6a-4633-b2d0-d89edd58a705.jpg",
+      "original_name": "IMG_4529.jpg",
+      "filepath": "/uploads/68813569-ff6a-4633-b2d0-d89edd58a705.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.363Z",
+      "updated_at": "2026-03-13T18:02:36.363Z"
+    },
+    {
+      "id": "9722834d-8cc2-4696-b9f0-ff8955e99f1e",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "34f1e7af-24d9-492f-a9f2-c3cc3abf66c8.jpg",
+      "original_name": "IMG_4530.jpg",
+      "filepath": "/uploads/34f1e7af-24d9-492f-a9f2-c3cc3abf66c8.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.364Z",
+      "updated_at": "2026-03-13T18:02:36.364Z"
+    },
+    {
+      "id": "26b31acb-40a3-4312-a526-60abf734639c",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "39e4efb4-9894-4d11-a987-9a5e31770c92.jpg",
+      "original_name": "IMG_4531.jpg",
+      "filepath": "/uploads/39e4efb4-9894-4d11-a987-9a5e31770c92.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.364Z",
+      "updated_at": "2026-03-13T18:02:36.364Z"
+    },
+    {
+      "id": "10ff7c62-f115-442a-8762-b12ce54d8992",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "a60065f0-8d3e-42a2-9f36-de00f72e2d5f.jpg",
+      "original_name": "IMG_4532.jpg",
+      "filepath": "/uploads/a60065f0-8d3e-42a2-9f36-de00f72e2d5f.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.365Z",
+      "updated_at": "2026-03-13T18:02:36.365Z"
+    },
+    {
+      "id": "ce2ed34c-396a-4960-b77a-3fa304671a29",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "a8727001-35a9-4196-959e-a401cd7cb189.jpg",
+      "original_name": "IMG_4533.jpg",
+      "filepath": "/uploads/a8727001-35a9-4196-959e-a401cd7cb189.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.365Z",
+      "updated_at": "2026-03-13T18:02:36.365Z"
+    },
+    {
+      "id": "f4de51ab-192d-42a2-9bbb-ddc3dfc12a67",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "64bcaaf9-8269-4bfd-8e1c-125e09e01400.jpg",
+      "original_name": "IMG_4534.jpg",
+      "filepath": "/uploads/64bcaaf9-8269-4bfd-8e1c-125e09e01400.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.366Z",
+      "updated_at": "2026-03-13T18:02:36.366Z"
+    },
+    {
+      "id": "ac6c643a-47e0-4051-9bd1-1b8cff545067",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "da701e69-587b-4490-8af1-0a8e782d78e5.jpg",
+      "original_name": "IMG_4535.jpg",
+      "filepath": "/uploads/da701e69-587b-4490-8af1-0a8e782d78e5.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.366Z",
+      "updated_at": "2026-03-13T18:02:36.366Z"
+    },
+    {
+      "id": "aa5743c7-6313-4956-b439-18f5573c0a82",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "26bcfa87-bcb7-4dcd-9734-caae52c3b32b.jpg",
+      "original_name": "IMG_4536.jpg",
+      "filepath": "/uploads/26bcfa87-bcb7-4dcd-9734-caae52c3b32b.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.367Z",
+      "updated_at": "2026-03-13T18:02:36.367Z"
+    },
+    {
+      "id": "72fe71a2-f7de-43e1-b6c8-f5fa62f110ca",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "353e8296-91d9-43cb-8eb5-810089d3f94b.jpg",
+      "original_name": "IMG_4537.jpg",
+      "filepath": "/uploads/353e8296-91d9-43cb-8eb5-810089d3f94b.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.367Z",
+      "updated_at": "2026-03-13T18:02:36.367Z"
+    },
+    {
+      "id": "aa754cda-f04e-4db8-a4ee-e301c11927f7",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "5327f22c-b723-4b2f-952e-52db288ba16c.jpg",
+      "original_name": "IMG_4538.jpg",
+      "filepath": "/uploads/5327f22c-b723-4b2f-952e-52db288ba16c.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.368Z",
+      "updated_at": "2026-03-13T18:02:36.368Z"
+    },
+    {
+      "id": "84d75bea-3f5e-4ad5-a9e9-3d1a456ff838",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "2076b988-7a75-448b-aad3-b065cae2b349.jpg",
+      "original_name": "IMG_4539.jpg",
+      "filepath": "/uploads/2076b988-7a75-448b-aad3-b065cae2b349.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.368Z",
+      "updated_at": "2026-03-13T18:02:36.368Z"
+    },
+    {
+      "id": "d6d7a89f-7bfe-42be-8cff-c3331586a6c4",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "ba57636a-0dc0-4e09-966a-c62dfd76d935.jpg",
+      "original_name": "IMG_4540.jpg",
+      "filepath": "/uploads/ba57636a-0dc0-4e09-966a-c62dfd76d935.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.369Z",
+      "updated_at": "2026-03-13T18:02:36.369Z"
+    },
+    {
+      "id": "4988317b-eb14-4b20-8ac1-6129c46ca51f",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "e3f877da-26e0-42f5-b8f2-2fb49cf83074.jpg",
+      "original_name": "IMG_4541.jpg",
+      "filepath": "/uploads/e3f877da-26e0-42f5-b8f2-2fb49cf83074.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.369Z",
+      "updated_at": "2026-03-13T18:02:36.369Z"
+    },
+    {
+      "id": "bedcb29a-882c-4d79-9c3a-51409f34155c",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "3e17438a-c2e2-4d6a-87b6-195ad58f571a.jpg",
+      "original_name": "IMG_4543.jpg",
+      "filepath": "/uploads/3e17438a-c2e2-4d6a-87b6-195ad58f571a.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.369Z",
+      "updated_at": "2026-03-13T18:02:36.369Z"
+    },
+    {
+      "id": "b23438b9-6e49-489f-a779-c6ac4f658030",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "43d02ed3-0e15-4bce-a97e-b79aa46d521c.jpg",
+      "original_name": "IMG_4544.jpg",
+      "filepath": "/uploads/43d02ed3-0e15-4bce-a97e-b79aa46d521c.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.370Z",
+      "updated_at": "2026-03-13T18:02:36.370Z"
+    },
+    {
+      "id": "3bf6a7d0-7880-4058-bd8b-5d59a5f8cf8a",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "788a8f4d-41d8-45c8-b4aa-9797d285d696.jpg",
+      "original_name": "IMG_4545.jpg",
+      "filepath": "/uploads/788a8f4d-41d8-45c8-b4aa-9797d285d696.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.371Z",
+      "updated_at": "2026-03-13T18:02:36.371Z"
+    },
+    {
+      "id": "0cac809b-4c1f-492f-b1f7-13c8b2674cb3",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "filename": "f1819f4a-be74-44c0-8f76-79a7f9805848.jpg",
+      "original_name": "IMG_4552.jpg",
+      "filepath": "/uploads/f1819f4a-be74-44c0-8f76-79a7f9805848.jpg",
+      "photo_type": "site",
+      "latitude": null,
+      "longitude": null,
+      "bearing": null,
+      "description": null,
+      "tags": null,
+      "analysis_data": null,
+      "created_at": "2026-03-13T18:02:36.371Z",
+      "updated_at": "2026-03-13T18:02:36.371Z"
+    }
+  ],
+  "survey_points": [],
+  "property_boundaries": [],
+  "structures": [],
+  "drainage_plans": [
+    {
+      "id": "ab57c3c4-b277-4fe4-a291-edc97885e15b",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "plan_name": "Drainage Plan — Ray Yard",
+      "plan_type": "comprehensive",
+      "status": "draft",
+      "plan_data": {
+        "drainage": {
+          "elements": [
+            {
+              "type": "collector_pipe",
+              "label": "Main Collector Line",
+              "geometry": {
+                "route": "from_high_to_low",
+                "follow_grade": true
+              },
+              "specifications": {
+                "diameter_in": 6,
+                "material": "corrugated_plastic",
+                "velocity_fps": 2.48,
+                "capacity_cfs": 0.488,
+                "capacity_gpm": 218.9,
+                "required_flow_cfs": 0.339,
+                "utilization_percent": 70,
+                "slope_percent": 1,
+                "mannings_n": 0.015,
+                "adequate": true
+              },
+              "slope_percent": 1,
+              "depth_in": 18,
+              "width_in": 6,
+              "material": "6\" solid corrugated HDPE",
+              "notes": "Connects all catch basins and French drains to outlet point"
+            },
+            {
+              "type": "grading",
+              "label": "Surface Grading",
+              "geometry": {
+                "area": "full_property"
+              },
+              "specifications": {
+                "min_slope_from_structures": "5% (6\" in 10ft) — IRC R401.3",
+                "general_yard_slope": "2% minimum toward collection points",
+                "swale_slope": "1-2% along bottom of swale",
+                "notes": "Grade all surfaces to direct water to collection points and away from structures"
+              },
+              "slope_percent": 2,
+              "depth_in": null,
+              "width_in": null,
+              "material": "Topsoil and compacted fill",
+              "notes": "Re-grade all areas to ensure positive drainage"
+            },
+            {
+              "type": "swale",
+              "label": "Drainage Swale",
+              "geometry": {
+                "route": "along_property_low_side"
+              },
+              "specifications": {
+                "depth_ft": 0.5,
+                "depth_in": 6,
+                "bottom_width_ft": 2,
+                "top_width_ft": 5,
+                "side_slope": "3:1",
+                "velocity_fps": 2.96,
+                "capacity_cfs": 5.175,
+                "erosion_risk": "MODERATE",
+                "lining_needed": false,
+                "adequate": true
+              },
+              "slope_percent": 1.5,
+              "depth_in": 6,
+              "width_in": 60,
+              "material": "Graded earth with sod/seed",
+              "notes": "Grade broad, shallow channel along natural low path"
+            },
+            {
+              "type": "outlet",
+              "label": "System Outlet",
+              "geometry": {
+                "at": "lowest_property_edge"
+              },
+              "specifications": {
+                "type": "pop_up_emitter",
+                "outlet_pipe_in": 6,
+                "erosion_protection": "Riprap apron 3ft × 3ft × 6\" deep, #57 stone",
+                "discharge_to": "Natural drainage way, storm sewer, or street"
+              },
+              "slope_percent": null,
+              "depth_in": null,
+              "width_in": 6,
+              "material": "HDPE outlet with riprap",
+              "notes": "Ensure outlet does not direct water toward neighboring properties"
+            }
+          ],
+          "design_storm": {
+            "scenario": "10-Year Storm (Design)",
+            "input": {
+              "area_sqft": 9156,
+              "area_acres": 0.21019283746556475,
+              "soil_type": "unknown",
+              "rainfall_inches": 5.375,
+              "duration_hours": 1,
+              "return_period_years": 10,
+              "impervious_area_sqft": 0
+            },
+            "runoff_coefficient": 0.3,
+            "rainfall_intensity_in_hr": 5.38,
+            "peak_flow_cfs": 0.339,
+            "peak_flow_gpm": 152.1,
+            "total_volume_cf": 1230.3,
+            "total_volume_gallons": 9204,
+            "time_of_concentration_min": 1.2,
+            "risk_level": {
+              "level": "CRITICAL",
+              "score": 95,
+              "color": "#dc2626"
+            },
+            "recommendations": [
+              {
+                "priority": "HIGH",
+                "type": "catch_basin",
+                "description": "Install catch basins at low points to capture high-volume runoff",
+                "reason": "Peak flow of 152.1 GPM requires active collection"
+              },
+              {
+                "priority": "HIGH",
+                "type": "french_drain",
+                "description": "Install French drain system along foundation and low areas",
+                "reason": "Significant runoff volume needs subsurface management"
+              },
+              {
+                "priority": "MEDIUM",
+                "type": "rain_garden",
+                "description": "Install rain garden(s) to absorb and filter large volumes",
+                "reason": "9,203.564 gallons per event needs infiltration capacity"
+              },
+              {
+                "priority": "STANDARD",
+                "type": "downspout_extension",
+                "description": "Extend all downspouts minimum 6 feet from foundation",
+                "reason": "Basic best practice for all properties"
+              },
+              {
+                "priority": "STANDARD",
+                "type": "grading_check",
+                "description": "Verify all grades slope away from structures at minimum 6 inches in 10 feet (5%)",
+                "reason": "IRC requirement for foundation protection"
+              }
+            ]
+          },
+          "analysis": {
+            "site_summary": {
+              "total_area_sqft": 9156,
+              "total_area_acres": 0.21,
+              "impervious_area_sqft": 0,
+              "impervious_ratio": 0,
+              "pervious_area_sqft": 9156,
+              "soil_type": "unknown",
+              "climate_zone": "6b",
+              "avg_rainfall_in": 43
+            },
+            "storm_analysis": [
+              {
+                "scenario": "1-Year Storm (Minor)",
+                "input": {
+                  "area_sqft": 9156,
+                  "area_acres": 0.21019283746556475,
+                  "soil_type": "unknown",
+                  "rainfall_inches": 0.8269230769230769,
+                  "duration_hours": 1,
+                  "return_period_years": 1,
+                  "impervious_area_sqft": 0
+                },
+                "runoff_coefficient": 0.3,
+                "rainfall_intensity_in_hr": 0.41,
+                "peak_flow_cfs": 0.026,
+                "peak_flow_gpm": 11.7,
+                "total_volume_cf": 189.3,
+                "total_volume_gallons": 1416,
+                "time_of_concentration_min": 1.2,
+                "risk_level": {
+                  "level": "LOW",
+                  "score": 25,
+                  "color": "#16a34a"
+                },
+                "recommendations": [
+                  {
+                    "priority": "MEDIUM",
+                    "type": "rain_garden",
+                    "description": "Install rain garden(s) to absorb and filter large volumes",
+                    "reason": "1,415.933 gallons per event needs infiltration capacity"
+                  },
+                  {
+                    "priority": "STANDARD",
+                    "type": "downspout_extension",
+                    "description": "Extend all downspouts minimum 6 feet from foundation",
+                    "reason": "Basic best practice for all properties"
+                  },
+                  {
+                    "priority": "STANDARD",
+                    "type": "grading_check",
+                    "description": "Verify all grades slope away from structures at minimum 6 inches in 10 feet (5%)",
+                    "reason": "IRC requirement for foundation protection"
+                  }
+                ]
+              },
+              {
+                "scenario": "10-Year Storm (Design)",
+                "input": {
+                  "area_sqft": 9156,
+                  "area_acres": 0.21019283746556475,
+                  "soil_type": "unknown",
+                  "rainfall_inches": 5.375,
+                  "duration_hours": 1,
+                  "return_period_years": 10,
+                  "impervious_area_sqft": 0
+                },
+                "runoff_coefficient": 0.3,
+                "rainfall_intensity_in_hr": 5.38,
+                "peak_flow_cfs": 0.339,
+                "peak_flow_gpm": 152.1,
+                "total_volume_cf": 1230.3,
+                "total_volume_gallons": 9204,
+                "time_of_concentration_min": 1.2,
+                "risk_level": {
+                  "level": "CRITICAL",
+                  "score": 95,
+                  "color": "#dc2626"
+                },
+                "recommendations": [
+                  {
+                    "priority": "HIGH",
+                    "type": "catch_basin",
+                    "description": "Install catch basins at low points to capture high-volume runoff",
+                    "reason": "Peak flow of 152.1 GPM requires active collection"
+                  },
+                  {
+                    "priority": "HIGH",
+                    "type": "french_drain",
+                    "description": "Install French drain system along foundation and low areas",
+                    "reason": "Significant runoff volume needs subsurface management"
+                  },
+                  {
+                    "priority": "MEDIUM",
+                    "type": "rain_garden",
+                    "description": "Install rain garden(s) to absorb and filter large volumes",
+                    "reason": "9,203.564 gallons per event needs infiltration capacity"
+                  },
+                  {
+                    "priority": "STANDARD",
+                    "type": "downspout_extension",
+                    "description": "Extend all downspouts minimum 6 feet from foundation",
+                    "reason": "Basic best practice for all properties"
+                  },
+                  {
+                    "priority": "STANDARD",
+                    "type": "grading_check",
+                    "description": "Verify all grades slope away from structures at minimum 6 inches in 10 feet (5%)",
+                    "reason": "IRC requirement for foundation protection"
+                  }
+                ]
+              },
+              {
+                "scenario": "25-Year Storm (Major)",
+                "input": {
+                  "area_sqft": 9156,
+                  "area_acres": 0.21019283746556475,
+                  "soil_type": "unknown",
+                  "rainfall_inches": 8.958333333333334,
+                  "duration_hours": 2,
+                  "return_period_years": 25,
+                  "impervious_area_sqft": 0
+                },
+                "runoff_coefficient": 0.3,
+                "rainfall_intensity_in_hr": 5.37,
+                "peak_flow_cfs": 0.339,
+                "peak_flow_gpm": 152,
+                "total_volume_cf": 2050.6,
+                "total_volume_gallons": 15339,
+                "time_of_concentration_min": 1.2,
+                "risk_level": {
+                  "level": "CRITICAL",
+                  "score": 95,
+                  "color": "#dc2626"
+                },
+                "recommendations": [
+                  {
+                    "priority": "HIGH",
+                    "type": "catch_basin",
+                    "description": "Install catch basins at low points to capture high-volume runoff",
+                    "reason": "Peak flow of 152.0 GPM requires active collection"
+                  },
+                  {
+                    "priority": "HIGH",
+                    "type": "french_drain",
+                    "description": "Install French drain system along foundation and low areas",
+                    "reason": "Significant runoff volume needs subsurface management"
+                  },
+                  {
+                    "priority": "MEDIUM",
+                    "type": "rain_garden",
+                    "description": "Install rain garden(s) to absorb and filter large volumes",
+                    "reason": "15,339.274 gallons per event needs infiltration capacity"
+                  },
+                  {
+                    "priority": "STANDARD",
+                    "type": "downspout_extension",
+                    "description": "Extend all downspouts minimum 6 feet from foundation",
+                    "reason": "Basic best practice for all properties"
+                  },
+                  {
+                    "priority": "STANDARD",
+                    "type": "grading_check",
+                    "description": "Verify all grades slope away from structures at minimum 6 inches in 10 feet (5%)",
+                    "reason": "IRC requirement for foundation protection"
+                  }
+                ]
+              },
+              {
+                "scenario": "100-Year Storm (Extreme)",
+                "input": {
+                  "area_sqft": 9156,
+                  "area_acres": 0.21019283746556475,
+                  "soil_type": "unknown",
+                  "rainfall_inches": 14.333333333333334,
+                  "duration_hours": 6,
+                  "return_period_years": 100,
+                  "impervious_area_sqft": 0
+                },
+                "runoff_coefficient": 0.3,
+                "rainfall_intensity_in_hr": 3.58,
+                "peak_flow_cfs": 0.226,
+                "peak_flow_gpm": 101.4,
+                "total_volume_cf": 3280.9,
+                "total_volume_gallons": 24543,
+                "time_of_concentration_min": 1.2,
+                "risk_level": {
+                  "level": "CRITICAL",
+                  "score": 95,
+                  "color": "#dc2626"
+                },
+                "recommendations": [
+                  {
+                    "priority": "HIGH",
+                    "type": "catch_basin",
+                    "description": "Install catch basins at low points to capture high-volume runoff",
+                    "reason": "Peak flow of 101.4 GPM requires active collection"
+                  },
+                  {
+                    "priority": "HIGH",
+                    "type": "french_drain",
+                    "description": "Install French drain system along foundation and low areas",
+                    "reason": "Significant runoff volume needs subsurface management"
+                  },
+                  {
+                    "priority": "MEDIUM",
+                    "type": "rain_garden",
+                    "description": "Install rain garden(s) to absorb and filter large volumes",
+                    "reason": "24,542.838 gallons per event needs infiltration capacity"
+                  },
+                  {
+                    "priority": "STANDARD",
+                    "type": "downspout_extension",
+                    "description": "Extend all downspouts minimum 6 feet from foundation",
+                    "reason": "Basic best practice for all properties"
+                  },
+                  {
+                    "priority": "STANDARD",
+                    "type": "grading_check",
+                    "description": "Verify all grades slope away from structures at minimum 6 inches in 10 feet (5%)",
+                    "reason": "IRC requirement for foundation protection"
+                  }
+                ]
+              }
+            ],
+            "problem_areas": [],
+            "overall_risk": {
+              "score": 45,
+              "level": "MODERATE",
+              "color": "#ca8a04"
+            },
+            "design_standard": "10-Year Storm Event (IRC/IBC Standard)"
+          },
+          "summary": {
+            "total_elements": 4,
+            "element_types": [
+              "collector_pipe",
+              "grading",
+              "swale",
+              "outlet"
+            ],
+            "design_standard": "IRC/IBC 10-Year Storm",
+            "risk_before": {
+              "score": 45,
+              "level": "MODERATE",
+              "color": "#ca8a04"
+            },
+            "estimated_risk_after": {
+              "score": 5,
+              "level": "MINIMAL",
+              "color": "#16a34a"
+            }
+          }
+        },
+        "landscaping": {
+          "elements": [
+            {
+              "type": "rain_garden",
+              "label": "Rain Garden",
+              "description": "Shallow depression planted with native plants that captures and filters stormwater runoff",
+              "area_sqft": 305,
+              "depth_in": 9,
+              "ponding_depth_in": 9,
+              "drain_time_hours": 18,
+              "soil_mix": "50% existing soil, 30% compost, 20% sand",
+              "mulch": "3\" hardwood mulch on slopes, 2\" in basin (NOT rubber mulch)",
+              "overflow": "Connect overflow to main drainage system or install weir at 6\" depth",
+              "plants": [
+                {
+                  "name": "Blue Flag Iris",
+                  "botanical": "Iris versicolor",
+                  "type": "perennial",
+                  "height": "2-3 ft",
+                  "zones": "3-9",
+                  "moisture": "wet to moist",
+                  "notes": "Excellent rain garden plant, beautiful blue flowers"
+                },
+                {
+                  "name": "Cardinal Flower",
+                  "botanical": "Lobelia cardinalis",
+                  "type": "perennial",
+                  "height": "2-4 ft",
+                  "zones": "3-9",
+                  "moisture": "wet to moist",
+                  "notes": "Bright red flowers, attracts hummingbirds"
+                },
+                {
+                  "name": "Swamp Milkweed",
+                  "botanical": "Asclepias incarnata",
+                  "type": "perennial",
+                  "height": "3-5 ft",
+                  "zones": "3-8",
+                  "moisture": "wet to moist",
+                  "notes": "Supports monarch butterflies, pink flowers"
+                },
+                {
+                  "name": "Joe-Pye Weed",
+                  "botanical": "Eutrochium purpureum",
+                  "type": "perennial",
+                  "height": "4-7 ft",
+                  "zones": "4-9",
+                  "moisture": "wet to moist",
+                  "notes": "Large purple flower clusters, excellent for pollinators"
+                },
+                {
+                  "name": "Black-Eyed Susan",
+                  "botanical": "Rudbeckia fulgida",
+                  "type": "perennial",
+                  "height": "2-3 ft",
+                  "zones": "3-9",
+                  "moisture": "moist to dry",
+                  "notes": "Long-blooming yellow flowers, very hardy"
+                },
+                {
+                  "name": "Coneflower",
+                  "botanical": "Echinacea purpurea",
+                  "type": "perennial",
+                  "height": "2-4 ft",
+                  "zones": "3-8",
+                  "moisture": "moist to dry",
+                  "notes": "Purple daisy flowers, drought tolerant once established"
+                },
+                {
+                  "name": "Daylily",
+                  "botanical": "Hemerocallis spp.",
+                  "type": "perennial",
+                  "height": "1-4 ft",
+                  "zones": "3-9",
+                  "moisture": "moist",
+                  "notes": "Reliable, many color options, good for slopes"
+                },
+                {
+                  "name": "Lavender",
+                  "botanical": "Lavandula spp.",
+                  "type": "perennial",
+                  "height": "1-3 ft",
+                  "zones": "5-9",
+                  "moisture": "dry",
+                  "notes": "Fragrant, drought tolerant, needs excellent drainage"
+                },
+                {
+                  "name": "Sedum",
+                  "botanical": "Sedum spp.",
+                  "type": "perennial",
+                  "height": "3-24 in",
+                  "zones": "3-9",
+                  "moisture": "dry",
+                  "notes": "Succulent groundcover, excellent for dry slopes"
+                }
+              ],
+              "planting_zones": {
+                "center_wet": {
+                  "description": "Deepest area — tolerates periodic flooding",
+                  "plants": [
+                    "Blue Flag Iris",
+                    "Cardinal Flower",
+                    "Swamp Milkweed",
+                    "Joe-Pye Weed"
+                  ]
+                },
+                "middle_moist": {
+                  "description": "Transition zone — moist but not flooded",
+                  "plants": [
+                    "Black-Eyed Susan",
+                    "Coneflower",
+                    "Daylily"
+                  ]
+                },
+                "edge_dry": {
+                  "description": "Rim of garden — well-drained",
+                  "plants": [
+                    "Lavender",
+                    "Sedum"
+                  ]
+                }
+              },
+              "installation_summary": "Excavate 305 sq ft area to 9\" deep with gradual side slopes (3:1). Amend soil, install plants in zones (wet center, moist middle, dry edges). Mulch and connect overflow.",
+              "estimated_duration": "1-2 days",
+              "estimated_cost": "$1221-$2442 (materials + plants)"
+            },
+            {
+              "type": "dry_creek_bed",
+              "label": "Dry Creek Bed",
+              "description": "Natural-looking stone channel that conveys water during rain and serves as landscape feature when dry",
+              "length_ft": 30,
+              "width_ft": 5,
+              "depth_in": 6,
+              "materials": {
+                "river_rock": {
+                  "size": "3-6 inch",
+                  "quantity_tons": 3.9
+                },
+                "boulders": {
+                  "size": "12-24 inch",
+                  "quantity": 6,
+                  "note": "Place at bends and transitions"
+                },
+                "pea_gravel": {
+                  "size": "3/8 inch",
+                  "quantity_bags": 10,
+                  "note": "Fill between larger stones"
+                },
+                "landscape_fabric": {
+                  "quantity_sqft": 232
+                },
+                "edging": {
+                  "type": "Natural stone or steel edging",
+                  "quantity_ft": 60
+                }
+              },
+              "plants": [
+                {
+                  "name": "Black-Eyed Susan",
+                  "botanical": "Rudbeckia fulgida",
+                  "type": "perennial",
+                  "height": "2-3 ft",
+                  "zones": "3-9",
+                  "moisture": "moist to dry",
+                  "notes": "Long-blooming yellow flowers, very hardy"
+                },
+                {
+                  "name": "Coneflower",
+                  "botanical": "Echinacea purpurea",
+                  "type": "perennial",
+                  "height": "2-4 ft",
+                  "zones": "3-8",
+                  "moisture": "moist to dry",
+                  "notes": "Purple daisy flowers, drought tolerant once established"
+                },
+                {
+                  "name": "Daylily",
+                  "botanical": "Hemerocallis spp.",
+                  "type": "perennial",
+                  "height": "1-4 ft",
+                  "zones": "3-9",
+                  "moisture": "moist",
+                  "notes": "Reliable, many color options, good for slopes"
+                },
+                {
+                  "name": "Crown Vetch",
+                  "botanical": "Securigera varia",
+                  "type": "groundcover",
+                  "height": "1-2 ft",
+                  "zones": "3-9",
+                  "notes": "Aggressive slope stabilizer, pink flowers"
+                },
+                {
+                  "name": "Creeping Red Fescue",
+                  "botanical": "Festuca rubra",
+                  "type": "grass",
+                  "height": "6-10 in",
+                  "zones": "3-7",
+                  "notes": "Fine-textured lawn grass that handles slopes well"
+                }
+              ],
+              "design_tips": [
+                "Curve the creek bed naturally — avoid straight lines",
+                "Vary stone sizes from large boulders to small pebbles",
+                "Place largest boulders at outside of curves",
+                "Cluster plants at bends and edges",
+                "Let some stones overlap the edges for natural look",
+                "Ensure positive grade throughout — no flat spots",
+                "Start and end at logical points (downspout, garden, property edge)"
+              ],
+              "installation_summary": "Excavate winding channel 30ft × 5ft × 6\". Line with landscape fabric, place boulders at bends, fill with river rock, plant edges.",
+              "estimated_duration": "1-2 days",
+              "estimated_cost": "$450-$900"
+            },
+            {
+              "type": "bioswale",
+              "label": "Planted Bioswale",
+              "description": "Vegetated channel that slows, filters, and infiltrates stormwater while adding beauty",
+              "specifications": {
+                "bottom_width_ft": 2,
+                "side_slopes": "3:1 or gentler",
+                "depth_in": 12,
+                "check_dams": "Install small stone check dams every 15-20 ft on steeper grades"
+              },
+              "plants": [
+                {
+                  "name": "Switchgrass",
+                  "botanical": "Panicum virgatum",
+                  "type": "grass",
+                  "height": "3-6 ft",
+                  "zones": "4-9",
+                  "moisture": "wet to dry",
+                  "notes": "Very adaptable native grass, excellent erosion control"
+                },
+                {
+                  "name": "Soft Rush",
+                  "botanical": "Juncus effusus",
+                  "type": "grass",
+                  "height": "2-4 ft",
+                  "zones": "4-9",
+                  "moisture": "wet",
+                  "notes": "Tolerates standing water, good for biofiltering"
+                },
+                {
+                  "name": "Blue Flag Iris",
+                  "botanical": "Iris versicolor",
+                  "type": "perennial",
+                  "height": "2-3 ft",
+                  "zones": "3-9",
+                  "moisture": "wet to moist",
+                  "notes": "Excellent rain garden plant, beautiful blue flowers"
+                },
+                {
+                  "name": "Cardinal Flower",
+                  "botanical": "Lobelia cardinalis",
+                  "type": "perennial",
+                  "height": "2-4 ft",
+                  "zones": "3-9",
+                  "moisture": "wet to moist",
+                  "notes": "Bright red flowers, attracts hummingbirds"
+                },
+                {
+                  "name": "Swamp Milkweed",
+                  "botanical": "Asclepias incarnata",
+                  "type": "perennial",
+                  "height": "3-5 ft",
+                  "zones": "3-8",
+                  "moisture": "wet to moist",
+                  "notes": "Supports monarch butterflies, pink flowers"
+                }
+              ],
+              "installation_summary": "Grade broad, shallow swale with 3:1 side slopes. Amend bottom 6\" with compost. Plant dense native grasses and perennials. Install check dams on slopes >2%.",
+              "estimated_duration": "1 day",
+              "benefits": [
+                "Slows runoff velocity by 50-80%",
+                "Filters sediment and pollutants",
+                "Promotes infiltration",
+                "Creates pollinator habitat",
+                "Low maintenance once established"
+              ]
+            },
+            {
+              "type": "permeable_hardscape",
+              "label": "Permeable Hardscape Recommendations",
+              "description": "Replace or supplement impervious surfaces to reduce runoff at the source",
+              "options": [
+                {
+                  "name": "Permeable Pavers",
+                  "application": "Driveways, patios, walkways",
+                  "infiltration": "10-20 in/hr when properly installed",
+                  "cost": "$12-25 per sq ft installed",
+                  "maintenance": "Vacuum or pressure wash joints annually to maintain infiltration",
+                  "pros": [
+                    "Significant runoff reduction",
+                    "Attractive appearance",
+                    "Long-lasting"
+                  ],
+                  "cons": [
+                    "Higher cost than standard concrete",
+                    "Requires periodic maintenance",
+                    "Needs proper base"
+                  ]
+                },
+                {
+                  "name": "Gravel / Crushed Stone",
+                  "application": "Paths, parking areas, utility areas",
+                  "infiltration": "20+ in/hr",
+                  "cost": "$3-8 per sq ft",
+                  "maintenance": "Replenish annually, maintain edges",
+                  "pros": [
+                    "Very affordable",
+                    "Excellent infiltration",
+                    "Easy to install"
+                  ],
+                  "cons": [
+                    "Not suitable for heavy traffic",
+                    "Can migrate without edging",
+                    "Weed maintenance"
+                  ]
+                },
+                {
+                  "name": "Grass Pavers (Turf Block)",
+                  "application": "Overflow parking, fire lanes, light-traffic areas",
+                  "infiltration": "8-15 in/hr",
+                  "cost": "$8-15 per sq ft",
+                  "maintenance": "Mow and water like regular lawn",
+                  "pros": [
+                    "Looks like lawn",
+                    "Supports vehicle weight",
+                    "High infiltration"
+                  ],
+                  "cons": [
+                    "Needs irrigation",
+                    "Not for heavy daily traffic",
+                    "Can rut in clay soil"
+                  ]
+                },
+                {
+                  "name": "Decomposed Granite (DG)",
+                  "application": "Paths, patios, drought-tolerant landscapes",
+                  "infiltration": "5-10 in/hr",
+                  "cost": "$3-6 per sq ft",
+                  "maintenance": "Replenish and compact annually",
+                  "pros": [
+                    "Natural appearance",
+                    "Good drainage",
+                    "Affordable"
+                  ],
+                  "cons": [
+                    "Can be dusty",
+                    "Tracks into house",
+                    "Requires edging"
+                  ]
+                }
+              ],
+              "installation_summary": "Evaluate existing impervious surfaces for conversion opportunities. Permeable pavers over French drain lines provide dual benefit.",
+              "estimated_duration": "Varies by scope"
+            }
+          ],
+          "plant_list": [
+            {
+              "name": "Creeping Red Fescue",
+              "botanical": "Festuca rubra",
+              "type": "grass",
+              "height": "6-10 in",
+              "zones": "3-7",
+              "notes": "Fine-textured lawn grass that handles slopes well",
+              "quantity": 1
+            },
+            {
+              "name": "Soft Rush",
+              "botanical": "Juncus effusus",
+              "type": "grass",
+              "height": "2-4 ft",
+              "zones": "4-9",
+              "moisture": "wet",
+              "notes": "Tolerates standing water, good for biofiltering",
+              "quantity": 1
+            },
+            {
+              "name": "Switchgrass",
+              "botanical": "Panicum virgatum",
+              "type": "grass",
+              "height": "3-6 ft",
+              "zones": "4-9",
+              "moisture": "wet to dry",
+              "notes": "Very adaptable native grass, excellent erosion control",
+              "quantity": 1
+            },
+            {
+              "name": "Crown Vetch",
+              "botanical": "Securigera varia",
+              "type": "groundcover",
+              "height": "1-2 ft",
+              "zones": "3-9",
+              "notes": "Aggressive slope stabilizer, pink flowers",
+              "quantity": 1
+            },
+            {
+              "name": "Black-Eyed Susan",
+              "botanical": "Rudbeckia fulgida",
+              "type": "perennial",
+              "height": "2-3 ft",
+              "zones": "3-9",
+              "moisture": "moist to dry",
+              "notes": "Long-blooming yellow flowers, very hardy",
+              "quantity": 2
+            },
+            {
+              "name": "Blue Flag Iris",
+              "botanical": "Iris versicolor",
+              "type": "perennial",
+              "height": "2-3 ft",
+              "zones": "3-9",
+              "moisture": "wet to moist",
+              "notes": "Excellent rain garden plant, beautiful blue flowers",
+              "quantity": 2
+            },
+            {
+              "name": "Cardinal Flower",
+              "botanical": "Lobelia cardinalis",
+              "type": "perennial",
+              "height": "2-4 ft",
+              "zones": "3-9",
+              "moisture": "wet to moist",
+              "notes": "Bright red flowers, attracts hummingbirds",
+              "quantity": 2
+            },
+            {
+              "name": "Coneflower",
+              "botanical": "Echinacea purpurea",
+              "type": "perennial",
+              "height": "2-4 ft",
+              "zones": "3-8",
+              "moisture": "moist to dry",
+              "notes": "Purple daisy flowers, drought tolerant once established",
+              "quantity": 2
+            },
+            {
+              "name": "Daylily",
+              "botanical": "Hemerocallis spp.",
+              "type": "perennial",
+              "height": "1-4 ft",
+              "zones": "3-9",
+              "moisture": "moist",
+              "notes": "Reliable, many color options, good for slopes",
+              "quantity": 2
+            },
+            {
+              "name": "Joe-Pye Weed",
+              "botanical": "Eutrochium purpureum",
+              "type": "perennial",
+              "height": "4-7 ft",
+              "zones": "4-9",
+              "moisture": "wet to moist",
+              "notes": "Large purple flower clusters, excellent for pollinators",
+              "quantity": 1
+            },
+            {
+              "name": "Lavender",
+              "botanical": "Lavandula spp.",
+              "type": "perennial",
+              "height": "1-3 ft",
+              "zones": "5-9",
+              "moisture": "dry",
+              "notes": "Fragrant, drought tolerant, needs excellent drainage",
+              "quantity": 1
+            },
+            {
+              "name": "Sedum",
+              "botanical": "Sedum spp.",
+              "type": "perennial",
+              "height": "3-24 in",
+              "zones": "3-9",
+              "moisture": "dry",
+              "notes": "Succulent groundcover, excellent for dry slopes",
+              "quantity": 1
+            },
+            {
+              "name": "Swamp Milkweed",
+              "botanical": "Asclepias incarnata",
+              "type": "perennial",
+              "height": "3-5 ft",
+              "zones": "3-8",
+              "moisture": "wet to moist",
+              "notes": "Supports monarch butterflies, pink flowers",
+              "quantity": 2
+            }
+          ],
+          "design_philosophy": {
+            "principles": [
+              "Manage water at the source — reduce, slow, spread, and infiltrate before conveying",
+              "Mimic natural hydrology — use plants and soil to filter and absorb runoff",
+              "Create multi-functional landscapes — every element serves drainage AND aesthetic purpose",
+              "Use native plants — adapted to local rainfall patterns, support ecosystem, low maintenance",
+              "Design for the worst, enjoy the best — system handles storms, looks great every day"
+            ],
+            "approach": "Green Infrastructure First — use natural systems where possible, engineered systems where necessary"
+          },
+          "maintenance_schedule": {
+            "monthly": [
+              "Inspect catch basin grates — clear debris",
+              "Check pop-up emitters — ensure they operate freely",
+              "Verify no erosion at outlet points"
+            ],
+            "quarterly": [
+              "Inspect French drain cleanouts — flush if needed",
+              "Check rain garden — remove sediment buildup if >1\"",
+              "Inspect dry creek bed — reposition displaced stones",
+              "Check all grades near foundation — correct any settlement"
+            ],
+            "annually": [
+              "Flush entire pipe system with garden hose",
+              "Replenish mulch in rain garden and planting beds (spring)",
+              "Divide and replant rain garden perennials as needed",
+              "Reseed any bare spots on slopes or swales",
+              "Clean/vacuum permeable paver joints",
+              "Inspect and repair any erosion damage",
+              "Test sump pump if installed"
+            ],
+            "after_major_storms": [
+              "Walk property and check for new ponding areas",
+              "Verify all catch basins are draining",
+              "Check outlet points for erosion",
+              "Clear any debris from grates and channels",
+              "Note any areas where system was overwhelmed — may need upgrades"
+            ]
+          }
+        },
+        "siteAnalysis": {
+          "topography": {
+            "status": "insufficient_data",
+            "message": "No elevation data available. Add survey points with elevations to enable topographic analysis.",
+            "min_elevation_ft": null,
+            "max_elevation_ft": null,
+            "total_relief_ft": null,
+            "avg_slope_percent": null,
+            "drainage_direction": "unknown"
+          },
+          "soil": {
+            "type": "unknown",
+            "usda_class": "Unknown — Soil Test Recommended",
+            "hydrologic_group": "C (assumed)",
+            "infiltration_rate_in_hr": 0.5,
+            "infiltration_range": "Unknown — assuming conservative 0.5 in/hr",
+            "permeability": "Assumed Low (conservative)",
+            "runoff_potential": "Assumed High (conservative)",
+            "water_holding_capacity": "Unknown",
+            "compaction_risk": "Unknown",
+            "shrink_swell": "Unknown",
+            "drainage_class": "Unknown",
+            "description": "Soil type has not been determined. Analysis uses conservative assumptions. A soil test is strongly recommended.",
+            "drainage_implications": [
+              "GET A SOIL TEST — results will significantly improve drainage plan accuracy",
+              "Using conservative (clay-like) assumptions for safety",
+              "Plan may be over-designed — soil test could reveal simpler solutions",
+              "Consider a percolation test: dig 12\" hole, fill with water, measure drain time"
+            ],
+            "amendment_recommendations": [
+              "Perform soil test: USDA Web Soil Survey or local extension office",
+              "DIY perc test: fill 12\" deep hole, time to drain. >4hrs = clay, <30min = sand"
+            ],
+            "curve_number": {
+              "lawn_good": 74,
+              "lawn_fair": 79,
+              "woods_good": 70
+            },
+            "site_variations": {},
+            "has_variation": false,
+            "variation_note": "Uniform soil type assumed across site",
+            "infiltration_capacity_cf_hr_per_1000sqft": 41.67,
+            "perc_test_recommendation": "STRONGLY RECOMMENDED: Perform percolation test at 3+ locations across property"
+          }
+        }
+      },
+      "materials_list": [
+        {
+          "category": "Collector Pipe",
+          "element": "Main Collector Line",
+          "items": [
+            {
+              "name": "6\" Solid HDPE pipe",
+              "quantity": 50,
+              "unit": "linear ft"
+            },
+            {
+              "name": "Pipe couplings",
+              "quantity": 5,
+              "unit": "each"
+            },
+            {
+              "name": "Wye fittings",
+              "quantity": 3,
+              "unit": "each"
+            }
+          ]
+        },
+        {
+          "category": "Grading",
+          "element": "Surface Grading",
+          "items": [
+            {
+              "name": "Fill dirt / topsoil",
+              "quantity": 5,
+              "unit": "cubic yards"
+            },
+            {
+              "name": "Sod or grass seed",
+              "quantity": 500,
+              "unit": "sq ft"
+            }
+          ]
+        },
+        {
+          "category": "Drainage Swale",
+          "element": "Drainage Swale",
+          "items": [
+            {
+              "name": "Topsoil (for grading)",
+              "quantity": 3,
+              "unit": "cubic yards"
+            },
+            {
+              "name": "Grass seed (erosion control mix)",
+              "quantity": 10,
+              "unit": "lbs"
+            },
+            {
+              "name": "Straw erosion blanket",
+              "quantity": 100,
+              "unit": "sq ft"
+            }
+          ]
+        },
+        {
+          "category": "Outlet",
+          "element": "System Outlet",
+          "items": [
+            {
+              "name": "Outlet adapter",
+              "quantity": 1,
+              "unit": "each"
+            },
+            {
+              "name": "#57 Riprap stone",
+              "quantity": 0.5,
+              "unit": "cubic yards"
+            },
+            {
+              "name": "Geotextile fabric",
+              "quantity": 15,
+              "unit": "sq ft"
+            }
+          ]
+        }
+      ],
+      "cost_estimate": {
+        "material_cost": 1063.25,
+        "labor_cost": 2126.5,
+        "equipment_cost": 350,
+        "subtotal": 3539.75,
+        "contingency_percent": 15,
+        "contingency_amount": 530.96,
+        "grand_total": 4070.71,
+        "cost_breakdown": [
+          {
+            "category": "Collector Pipe",
+            "element": "Main Collector Line",
+            "items": [
+              {
+                "name": "6\" Solid HDPE pipe",
+                "quantity": 50,
+                "unit": "linear ft",
+                "unit_cost": 3.5,
+                "total_cost": 175
+              },
+              {
+                "name": "Pipe couplings",
+                "quantity": 5,
+                "unit": "each",
+                "unit_cost": 4,
+                "total_cost": 20
+              },
+              {
+                "name": "Wye fittings",
+                "quantity": 3,
+                "unit": "each",
+                "unit_cost": 12,
+                "total_cost": 36
+              }
+            ],
+            "subtotal": 231
+          },
+          {
+            "category": "Grading",
+            "element": "Surface Grading",
+            "items": [
+              {
+                "name": "Fill dirt / topsoil",
+                "quantity": 5,
+                "unit": "cubic yards",
+                "unit_cost": 35,
+                "total_cost": 175
+              },
+              {
+                "name": "Sod or grass seed",
+                "quantity": 500,
+                "unit": "sq ft",
+                "unit_cost": 0.8,
+                "total_cost": 400
+              }
+            ],
+            "subtotal": 575
+          },
+          {
+            "category": "Drainage Swale",
+            "element": "Drainage Swale",
+            "items": [
+              {
+                "name": "Topsoil (for grading)",
+                "quantity": 3,
+                "unit": "cubic yards",
+                "unit_cost": 35,
+                "total_cost": 105
+              },
+              {
+                "name": "Grass seed (erosion control mix)",
+                "quantity": 10,
+                "unit": "lbs",
+                "unit_cost": 5,
+                "total_cost": 50
+              },
+              {
+                "name": "Straw erosion blanket",
+                "quantity": 100,
+                "unit": "sq ft",
+                "unit_cost": 0.6,
+                "total_cost": 60
+              }
+            ],
+            "subtotal": 215
+          },
+          {
+            "category": "Outlet",
+            "element": "System Outlet",
+            "items": [
+              {
+                "name": "Outlet adapter",
+                "quantity": 1,
+                "unit": "each",
+                "unit_cost": 8,
+                "total_cost": 8
+              },
+              {
+                "name": "#57 Riprap stone",
+                "quantity": 0.5,
+                "unit": "cubic yards",
+                "unit_cost": 55,
+                "total_cost": 27.5
+              },
+              {
+                "name": "Geotextile fabric",
+                "quantity": 15,
+                "unit": "sq ft",
+                "unit_cost": 0.45,
+                "total_cost": 6.75
+              }
+            ],
+            "subtotal": 42.25
+          }
+        ],
+        "notes": [
+          "Costs are estimates based on national averages — local pricing may vary",
+          "Labor assumes professional installation at $45-65/hr",
+          "Equipment includes mini excavator rental if needed",
+          "15% contingency for unforeseen conditions",
+          "Permit fees not included — check local requirements",
+          "DIY savings: labor portion can be reduced 50-100%"
+        ],
+        "diy_estimate": 1625.24
+      },
+      "installation_steps": {
+        "total_steps": 18,
+        "estimated_total_duration": "2-4 days (professional) / 3-7 days (DIY)",
+        "phases": [
+          "Preparation",
+          "Excavation",
+          "Installation",
+          "Grading & Restoration",
+          "Landscaping",
+          "Testing & Verification"
+        ],
+        "steps": [
+          {
+            "phase": "Preparation",
+            "step": 1,
+            "title": "Call 811 — Locate Underground Utilities",
+            "description": "Contact your local 811 service at least 48 hours before digging. Mark all utility locations. This is REQUIRED BY LAW.",
+            "duration": "2-3 business days",
+            "critical": true
+          },
+          {
+            "phase": "Preparation",
+            "step": 2,
+            "title": "Obtain Permits",
+            "description": "Check with local building department for grading/drainage permits. Some jurisdictions require permits for any work affecting stormwater flow.",
+            "duration": "1-2 weeks",
+            "critical": true
+          },
+          {
+            "phase": "Preparation",
+            "step": 3,
+            "title": "Mark Layout & Establish Grade Stakes",
+            "description": "Use string lines and stakes to mark all trench locations, catch basin positions, and outlet points. Verify slopes with a laser level or transit.",
+            "duration": "2-4 hours",
+            "critical": false
+          },
+          {
+            "phase": "Excavation",
+            "step": 4,
+            "title": "Strip & Stockpile Topsoil",
+            "description": "Remove topsoil from trench areas and stockpile for backfill. Keep separate from subsoil.",
+            "duration": "2-4 hours",
+            "critical": false
+          },
+          {
+            "phase": "Installation",
+            "step": 5,
+            "title": "Install Catch Basins & Set Elevations",
+            "description": "Set catch basins on compacted gravel base. Verify rim elevation flush with planned finished grade. Connect outlet pipes.",
+            "duration": "2-3 hours",
+            "critical": true
+          },
+          {
+            "phase": "Installation",
+            "step": 6,
+            "title": "Install French Drain System",
+            "description": "Line trenches with fabric, add gravel bed, place perforated pipe (holes DOWN), backfill with gravel, wrap fabric over top.",
+            "duration": "4-8 hours",
+            "critical": true
+          },
+          {
+            "phase": "Installation",
+            "step": 7,
+            "title": "Install Collector Pipes & Connect System",
+            "description": "Lay solid collector pipe from catch basins and French drain outlets to system outlet. Maintain minimum 1% slope throughout.",
+            "duration": "3-5 hours",
+            "critical": true
+          },
+          {
+            "phase": "Installation",
+            "step": 8,
+            "title": "Install Downspout Extensions",
+            "description": "Connect underground extensions to each downspout. Route to pop-up emitters or tie into collector system.",
+            "duration": "2-4 hours",
+            "critical": false
+          },
+          {
+            "phase": "Installation",
+            "step": 9,
+            "title": "Install System Outlet",
+            "description": "Install outlet at lowest property point. Add riprap apron for erosion protection. Verify discharge direction.",
+            "duration": "1-2 hours",
+            "critical": true
+          },
+          {
+            "phase": "Grading & Restoration",
+            "step": 10,
+            "title": "Rough Grading",
+            "description": "Grade all disturbed areas to establish proper drainage slopes. Minimum 5% away from structures, 2% across yard areas.",
+            "duration": "3-6 hours",
+            "critical": true
+          },
+          {
+            "phase": "Grading & Restoration",
+            "step": 11,
+            "title": "Fine Grading & Swale Construction",
+            "description": "Shape swales and fine-grade all surfaces. Compact fill. Verify all grades with level.",
+            "duration": "2-4 hours",
+            "critical": false
+          },
+          {
+            "phase": "Landscaping",
+            "step": 12,
+            "title": "Install Rain Garden",
+            "description": "Excavate 305 sq ft area to 9\" deep with gradual side slopes (3:1). Amend soil, install plants in zones (wet center, moist middle, dry edges). Mulch and connect overflow.",
+            "duration": "1-2 days",
+            "critical": false
+          },
+          {
+            "phase": "Landscaping",
+            "step": 13,
+            "title": "Install Dry Creek Bed",
+            "description": "Excavate winding channel 30ft × 5ft × 6\". Line with landscape fabric, place boulders at bends, fill with river rock, plant edges.",
+            "duration": "1-2 days",
+            "critical": false
+          },
+          {
+            "phase": "Landscaping",
+            "step": 14,
+            "title": "Install Planted Bioswale",
+            "description": "Grade broad, shallow swale with 3:1 side slopes. Amend bottom 6\" with compost. Plant dense native grasses and perennials. Install check dams on slopes >2%.",
+            "duration": "1 day",
+            "critical": false
+          },
+          {
+            "phase": "Landscaping",
+            "step": 15,
+            "title": "Install Permeable Hardscape Recommendations",
+            "description": "Evaluate existing impervious surfaces for conversion opportunities. Permeable pavers over French drain lines provide dual benefit.",
+            "duration": "Varies by scope",
+            "critical": false
+          },
+          {
+            "phase": "Landscaping",
+            "step": 16,
+            "title": "Seed/Sod & Mulch",
+            "description": "Apply seed or sod to all disturbed areas. Mulch planting beds. Install erosion control blanket on slopes.",
+            "duration": "2-4 hours",
+            "critical": false
+          },
+          {
+            "phase": "Testing & Verification",
+            "step": 17,
+            "title": "System Flow Test",
+            "description": "Run water through each system component using a garden hose. Verify flow at all catch basins, French drains, and outlet. Check for leaks or backups.",
+            "duration": "1-2 hours",
+            "critical": true
+          },
+          {
+            "phase": "Testing & Verification",
+            "step": 18,
+            "title": "Grade Verification",
+            "description": "After first rain event, walk property and verify no ponding near structures. Check all grades and make adjustments as needed.",
+            "duration": "1 hour (after rain)",
+            "critical": true
+          }
+        ]
+      },
+      "notes": null,
+      "created_at": "2026-03-13T18:03:20.774Z",
+      "updated_at": "2026-03-13T18:03:20.774Z"
+    }
+  ],
+  "drainage_elements": [
+    {
+      "id": "90741eff-6caa-4bb0-a88c-fe7fd5803922",
+      "plan_id": "ab57c3c4-b277-4fe4-a291-edc97885e15b",
+      "element_type": "collector_pipe",
+      "label": "Main Collector Line",
+      "geometry": {
+        "route": "from_high_to_low",
+        "follow_grade": true
+      },
+      "specifications": {
+        "diameter_in": 6,
+        "material": "corrugated_plastic",
+        "velocity_fps": 2.48,
+        "capacity_cfs": 0.488,
+        "capacity_gpm": 218.9,
+        "required_flow_cfs": 0.339,
+        "utilization_percent": 70,
+        "slope_percent": 1,
+        "mannings_n": 0.015,
+        "adequate": true
+      },
+      "slope_percent": 1,
+      "depth_in": 18,
+      "width_in": 6,
+      "material": "6\" solid corrugated HDPE",
+      "notes": "Connects all catch basins and French drains to outlet point",
+      "created_at": "2026-03-13T18:03:20.775Z",
+      "updated_at": "2026-03-13T18:03:20.775Z"
+    },
+    {
+      "id": "ac1a4dfc-c65d-4824-9dd5-3909534bd0de",
+      "plan_id": "ab57c3c4-b277-4fe4-a291-edc97885e15b",
+      "element_type": "grading",
+      "label": "Surface Grading",
+      "geometry": {
+        "area": "full_property"
+      },
+      "specifications": {
+        "min_slope_from_structures": "5% (6\" in 10ft) — IRC R401.3",
+        "general_yard_slope": "2% minimum toward collection points",
+        "swale_slope": "1-2% along bottom of swale",
+        "notes": "Grade all surfaces to direct water to collection points and away from structures"
+      },
+      "slope_percent": 2,
+      "depth_in": null,
+      "width_in": null,
+      "material": "Topsoil and compacted fill",
+      "notes": "Re-grade all areas to ensure positive drainage",
+      "created_at": "2026-03-13T18:03:20.776Z",
+      "updated_at": "2026-03-13T18:03:20.776Z"
+    },
+    {
+      "id": "365b8eb3-c070-493f-a324-02eee146afe0",
+      "plan_id": "ab57c3c4-b277-4fe4-a291-edc97885e15b",
+      "element_type": "swale",
+      "label": "Drainage Swale",
+      "geometry": {
+        "route": "along_property_low_side"
+      },
+      "specifications": {
+        "depth_ft": 0.5,
+        "depth_in": 6,
+        "bottom_width_ft": 2,
+        "top_width_ft": 5,
+        "side_slope": "3:1",
+        "velocity_fps": 2.96,
+        "capacity_cfs": 5.175,
+        "erosion_risk": "MODERATE",
+        "lining_needed": false,
+        "adequate": true
+      },
+      "slope_percent": 1.5,
+      "depth_in": 6,
+      "width_in": 60,
+      "material": "Graded earth with sod/seed",
+      "notes": "Grade broad, shallow channel along natural low path",
+      "created_at": "2026-03-13T18:03:20.778Z",
+      "updated_at": "2026-03-13T18:03:20.778Z"
+    },
+    {
+      "id": "807c2f1e-4202-4991-b8d9-916762d2a74f",
+      "plan_id": "ab57c3c4-b277-4fe4-a291-edc97885e15b",
+      "element_type": "outlet",
+      "label": "System Outlet",
+      "geometry": {
+        "at": "lowest_property_edge"
+      },
+      "specifications": {
+        "type": "pop_up_emitter",
+        "outlet_pipe_in": 6,
+        "erosion_protection": "Riprap apron 3ft × 3ft × 6\" deep, #57 stone",
+        "discharge_to": "Natural drainage way, storm sewer, or street"
+      },
+      "slope_percent": null,
+      "depth_in": null,
+      "width_in": 6,
+      "material": "HDPE outlet with riprap",
+      "notes": "Ensure outlet does not direct water toward neighboring properties",
+      "created_at": "2026-03-13T18:03:20.780Z",
+      "updated_at": "2026-03-13T18:03:20.780Z"
+    }
+  ],
+  "water_flow_analysis": [
+    {
+      "id": "e1ea7180-1be4-4563-8096-b11491fab39c",
+      "project_id": "d911dcab-94d2-4ee9-a24a-e53d0eacf4f6",
+      "analysis_type": "full_site",
+      "input_data": {
+        "surveyPoints": 0,
+        "soil_type": "unknown"
+      },
+      "results": {
+        "site_summary": {
+          "total_area_sqft": 9156,
+          "total_area_acres": 0.21,
+          "impervious_area_sqft": 0,
+          "impervious_ratio": 0,
+          "pervious_area_sqft": 9156,
+          "soil_type": "unknown",
+          "climate_zone": "6b",
+          "avg_rainfall_in": 43
+        },
+        "storm_analysis": [
+          {
+            "scenario": "1-Year Storm (Minor)",
+            "input": {
+              "area_sqft": 9156,
+              "area_acres": 0.21019283746556475,
+              "soil_type": "unknown",
+              "rainfall_inches": 0.8269230769230769,
+              "duration_hours": 1,
+              "return_period_years": 1,
+              "impervious_area_sqft": 0
+            },
+            "runoff_coefficient": 0.3,
+            "rainfall_intensity_in_hr": 0.41,
+            "peak_flow_cfs": 0.026,
+            "peak_flow_gpm": 11.7,
+            "total_volume_cf": 189.3,
+            "total_volume_gallons": 1416,
+            "time_of_concentration_min": 1.2,
+            "risk_level": {
+              "level": "LOW",
+              "score": 25,
+              "color": "#16a34a"
+            },
+            "recommendations": [
+              {
+                "priority": "MEDIUM",
+                "type": "rain_garden",
+                "description": "Install rain garden(s) to absorb and filter large volumes",
+                "reason": "1,415.933 gallons per event needs infiltration capacity"
+              },
+              {
+                "priority": "STANDARD",
+                "type": "downspout_extension",
+                "description": "Extend all downspouts minimum 6 feet from foundation",
+                "reason": "Basic best practice for all properties"
+              },
+              {
+                "priority": "STANDARD",
+                "type": "grading_check",
+                "description": "Verify all grades slope away from structures at minimum 6 inches in 10 feet (5%)",
+                "reason": "IRC requirement for foundation protection"
+              }
+            ]
+          },
+          {
+            "scenario": "10-Year Storm (Design)",
+            "input": {
+              "area_sqft": 9156,
+              "area_acres": 0.21019283746556475,
+              "soil_type": "unknown",
+              "rainfall_inches": 5.375,
+              "duration_hours": 1,
+              "return_period_years": 10,
+              "impervious_area_sqft": 0
+            },
+            "runoff_coefficient": 0.3,
+            "rainfall_intensity_in_hr": 5.38,
+            "peak_flow_cfs": 0.339,
+            "peak_flow_gpm": 152.1,
+            "total_volume_cf": 1230.3,
+            "total_volume_gallons": 9204,
+            "time_of_concentration_min": 1.2,
+            "risk_level": {
+              "level": "CRITICAL",
+              "score": 95,
+              "color": "#dc2626"
+            },
+            "recommendations": [
+              {
+                "priority": "HIGH",
+                "type": "catch_basin",
+                "description": "Install catch basins at low points to capture high-volume runoff",
+                "reason": "Peak flow of 152.1 GPM requires active collection"
+              },
+              {
+                "priority": "HIGH",
+                "type": "french_drain",
+                "description": "Install French drain system along foundation and low areas",
+                "reason": "Significant runoff volume needs subsurface management"
+              },
+              {
+                "priority": "MEDIUM",
+                "type": "rain_garden",
+                "description": "Install rain garden(s) to absorb and filter large volumes",
+                "reason": "9,203.564 gallons per event needs infiltration capacity"
+              },
+              {
+                "priority": "STANDARD",
+                "type": "downspout_extension",
+                "description": "Extend all downspouts minimum 6 feet from foundation",
+                "reason": "Basic best practice for all properties"
+              },
+              {
+                "priority": "STANDARD",
+                "type": "grading_check",
+                "description": "Verify all grades slope away from structures at minimum 6 inches in 10 feet (5%)",
+                "reason": "IRC requirement for foundation protection"
+              }
+            ]
+          },
+          {
+            "scenario": "25-Year Storm (Major)",
+            "input": {
+              "area_sqft": 9156,
+              "area_acres": 0.21019283746556475,
+              "soil_type": "unknown",
+              "rainfall_inches": 8.958333333333334,
+              "duration_hours": 2,
+              "return_period_years": 25,
+              "impervious_area_sqft": 0
+            },
+            "runoff_coefficient": 0.3,
+            "rainfall_intensity_in_hr": 5.37,
+            "peak_flow_cfs": 0.339,
+            "peak_flow_gpm": 152,
+            "total_volume_cf": 2050.6,
+            "total_volume_gallons": 15339,
+            "time_of_concentration_min": 1.2,
+            "risk_level": {
+              "level": "CRITICAL",
+              "score": 95,
+              "color": "#dc2626"
+            },
+            "recommendations": [
+              {
+                "priority": "HIGH",
+                "type": "catch_basin",
+                "description": "Install catch basins at low points to capture high-volume runoff",
+                "reason": "Peak flow of 152.0 GPM requires active collection"
+              },
+              {
+                "priority": "HIGH",
+                "type": "french_drain",
+                "description": "Install French drain system along foundation and low areas",
+                "reason": "Significant runoff volume needs subsurface management"
+              },
+              {
+                "priority": "MEDIUM",
+                "type": "rain_garden",
+                "description": "Install rain garden(s) to absorb and filter large volumes",
+                "reason": "15,339.274 gallons per event needs infiltration capacity"
+              },
+              {
+                "priority": "STANDARD",
+                "type": "downspout_extension",
+                "description": "Extend all downspouts minimum 6 feet from foundation",
+                "reason": "Basic best practice for all properties"
+              },
+              {
+                "priority": "STANDARD",
+                "type": "grading_check",
+                "description": "Verify all grades slope away from structures at minimum 6 inches in 10 feet (5%)",
+                "reason": "IRC requirement for foundation protection"
+              }
+            ]
+          },
+          {
+            "scenario": "100-Year Storm (Extreme)",
+            "input": {
+              "area_sqft": 9156,
+              "area_acres": 0.21019283746556475,
+              "soil_type": "unknown",
+              "rainfall_inches": 14.333333333333334,
+              "duration_hours": 6,
+              "return_period_years": 100,
+              "impervious_area_sqft": 0
+            },
+            "runoff_coefficient": 0.3,
+            "rainfall_intensity_in_hr": 3.58,
+            "peak_flow_cfs": 0.226,
+            "peak_flow_gpm": 101.4,
+            "total_volume_cf": 3280.9,
+            "total_volume_gallons": 24543,
+            "time_of_concentration_min": 1.2,
+            "risk_level": {
+              "level": "CRITICAL",
+              "score": 95,
+              "color": "#dc2626"
+            },
+            "recommendations": [
+              {
+                "priority": "HIGH",
+                "type": "catch_basin",
+                "description": "Install catch basins at low points to capture high-volume runoff",
+                "reason": "Peak flow of 101.4 GPM requires active collection"
+              },
+              {
+                "priority": "HIGH",
+                "type": "french_drain",
+                "description": "Install French drain system along foundation and low areas",
+                "reason": "Significant runoff volume needs subsurface management"
+              },
+              {
+                "priority": "MEDIUM",
+                "type": "rain_garden",
+                "description": "Install rain garden(s) to absorb and filter large volumes",
+                "reason": "24,542.838 gallons per event needs infiltration capacity"
+              },
+              {
+                "priority": "STANDARD",
+                "type": "downspout_extension",
+                "description": "Extend all downspouts minimum 6 feet from foundation",
+                "reason": "Basic best practice for all properties"
+              },
+              {
+                "priority": "STANDARD",
+                "type": "grading_check",
+                "description": "Verify all grades slope away from structures at minimum 6 inches in 10 feet (5%)",
+                "reason": "IRC requirement for foundation protection"
+              }
+            ]
+          }
+        ],
+        "problem_areas": [],
+        "overall_risk": {
+          "score": 45,
+          "level": "MODERATE",
+          "color": "#ca8a04"
+        },
+        "design_standard": "10-Year Storm Event (IRC/IBC Standard)"
+      },
+      "created_at": "2026-03-13T18:03:04.961Z",
+      "updated_at": "2026-03-13T18:03:04.961Z"
+    }
+  ]
+}
