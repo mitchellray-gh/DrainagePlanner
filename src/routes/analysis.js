@@ -9,6 +9,36 @@ const DrainageEngine = require('../engine/drainageEngine');
 const TopographyEngine = require('../engine/topographyEngine');
 const SoilEngine = require('../engine/soilEngine');
 
+// elevation lookup (proxy) - supports ELEVATION_API_URL env var or falls back to Open-Elevation
+router.get('/elevation', async (req, res) => {
+  try {
+    const lat = parseFloat(req.query.lat);
+    const lng = parseFloat(req.query.lng);
+    if (isNaN(lat) || isNaN(lng)) return res.status(400).json({ success: false, error: 'lat and lng required' });
+
+    const apiUrlTemplate = process.env.ELEVATION_API_URL || 'https://api.open-elevation.com/api/v1/lookup?locations={lat},{lng}';
+    const apiUrl = apiUrlTemplate.replace('{lat}', encodeURIComponent(lat)).replace('{lng}', encodeURIComponent(lng));
+
+    // Use global fetch (Node 18+)
+    const resp = await fetch(apiUrl);
+    if (!resp.ok) return res.status(502).json({ success: false, error: 'Elevation service error' });
+    const body = await resp.json();
+
+    // open-elevation returns { results: [ { latitude, longitude, elevation } ] }
+    let elevation_m = null;
+    if (body && body.results && body.results.length) elevation_m = parseFloat(body.results[0].elevation);
+    // Some APIs return different shapes; try common fallbacks
+    if (elevation_m == null && body.elevation != null) elevation_m = parseFloat(body.elevation);
+
+    if (elevation_m == null || Number.isNaN(elevation_m)) return res.status(502).json({ success: false, error: 'Unable to parse elevation' });
+
+    const elevation_ft = +(elevation_m * 3.28084).toFixed(2);
+    res.json({ success: true, elevation: { meters: elevation_m, feet: elevation_ft } });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // POST run full site analysis
 router.post('/full/:projectId', (req, res) => {
   try {

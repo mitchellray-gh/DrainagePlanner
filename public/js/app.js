@@ -353,6 +353,8 @@ function initSurveyMap() {
   surveyMap.on('click', (e) => {
     document.getElementById('sp-lat').value = e.latlng.lat.toFixed(6);
     document.getElementById('sp-lng').value = e.latlng.lng.toFixed(6);
+    // attempt to auto-fetch elevation for the clicked point
+    fetchElevationForInput(e.latlng.lat, e.latlng.lng);
   });
 
   // Add existing survey points to map
@@ -435,6 +437,45 @@ document.getElementById('survey-point-form').addEventListener('submit', async (e
     showNotification('Error adding point: ' + err.message, 'error');
   }
 });
+
+// Auto-locate button (use device GPS then fetch elevation)
+document.getElementById('sp-auto-locate')?.addEventListener('click', async () => {
+  if (!navigator.geolocation) return showNotification('Geolocation not supported by your browser', 'error');
+  showNotification('Acquiring GPS position...');
+  navigator.geolocation.getCurrentPosition(async (pos) => {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+    document.getElementById('sp-lat').value = lat.toFixed(6);
+    document.getElementById('sp-lng').value = lng.toFixed(6);
+    showNotification('GPS position acquired — fetching elevation...');
+    try {
+      const res = await fetch(`${API}/api/analysis/elevation?lat=${lat}&lng=${lng}`);
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('sp-elev').value = data.elevation.feet;
+        showNotification('Elevation filled: ' + data.elevation.feet + ' ft', 'success');
+      } else {
+        showNotification('Elevation lookup failed: ' + (data.error || 'unknown'), 'warning');
+      }
+    } catch (err) {
+      showNotification('Elevation error: ' + err.message, 'error');
+    }
+  }, (err) => {
+    showNotification('GPS error: ' + err.message, 'error');
+  }, { enableHighAccuracy: true, timeout: 10000 });
+});
+
+// When clicking on the survey map, auto-fetch elevation for the clicked point
+function fetchElevationForInput(lat, lng) {
+  if (!lat || !lng) return;
+  fetch(`${API}/api/analysis/elevation?lat=${lat}&lng=${lng}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) document.getElementById('sp-elev').value = data.elevation.feet;
+    }).catch(err => {
+      console.debug('Elevation lookup failed', err);
+    });
+}
 
 function renderSurveyPoints(points) {
   const tbody = document.querySelector('#survey-points-table tbody');
