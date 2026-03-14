@@ -46,7 +46,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 50 * 1024 * 1024 },
+  // allow reasonably large files and more files per batch
+  limits: { fileSize: 50 * 1024 * 1024, files: 50 },
   fileFilter: (req, file, cb) => {
     if (/\.(jpg|jpeg|png|heic|heif|webp|tiff|gif)$/i.test(path.extname(file.originalname))) {
       cb(null, true);
@@ -57,7 +58,7 @@ const upload = multer({
 });
 
 // POST upload photo(s)
-router.post('/upload/:projectId', upload.array('photos', 20), (req, res) => {
+router.post('/upload/:projectId', upload.array('photos', 50), (req, res) => {
   try {
     const projectId = req.params.projectId;
     const project = db.findById('projects', projectId);
@@ -65,6 +66,16 @@ router.post('/upload/:projectId', upload.array('photos', 20), (req, res) => {
 
     const { photo_type, description, tags, latitude, longitude } = req.body;
     const photos = [];
+
+    if (!req.files || !req.files.length) {
+      return res.status(400).json({ success: false, error: 'No files received' });
+    }
+
+    // Debug logging: file counts and sizes (helps diagnose batch failures)
+    try {
+      console.info(`Uploading ${req.files.length} file(s) for project ${projectId}`);
+      for (const f of req.files) console.debug(`file: ${f.originalname} -> ${f.filename} (${f.size} bytes)`);
+    } catch (e) { /* ignore logging errors */ }
 
     for (const file of req.files) {
       const id = uuidv4();
@@ -98,6 +109,19 @@ router.post('/upload/:projectId', upload.array('photos', 20), (req, res) => {
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
+});
+
+// Multer / upload error handler — returns JSON so the frontend can parse errors
+router.use((err, req, res, next) => {
+  if (err) {
+    // Multer-specific errors have a name/code
+    if (err.name === 'MulterError') {
+      return res.status(400).json({ success: false, error: err.message, code: err.code });
+    }
+    // Generic errors (e.g., fileFilter rejection) should also return JSON
+    return res.status(400).json({ success: false, error: err.message });
+  }
+  next();
 });
 
 // GET all photos for a project
