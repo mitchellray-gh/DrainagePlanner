@@ -9,8 +9,38 @@ const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const db = require('../models/database');
 
+// Determine an uploads directory that is writable. Allow override via UPLOAD_DIR env var.
+const DEFAULT_UPLOAD_DIR = path.join(__dirname, '..', '..', 'uploads');
+const UPLOAD_DIR = process.env.UPLOAD_DIR || DEFAULT_UPLOAD_DIR;
+
+// Ensure upload dir exists and is writable. If not, fallback to os.tmpdir().
+const os = require('os');
+function ensureUploadDir(dir) {
+  try {
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.accessSync(dir, fs.constants.W_OK);
+    return dir;
+  } catch (err) {
+    const fallback = process.env.UPLOAD_FALLBACK_DIR || os.tmpdir();
+    try {
+      if (!fs.existsSync(fallback)) fs.mkdirSync(fallback, { recursive: true });
+      fs.accessSync(fallback, fs.constants.W_OK);
+      console.warn(`Upload directory ${dir} not writable; falling back to ${fallback}`);
+      return fallback;
+    } catch (err2) {
+      console.error('No writable upload directory available; uploads will fail');
+      return null;
+    }
+  }
+}
+
+const FINAL_UPLOAD_DIR = ensureUploadDir(UPLOAD_DIR) || ensureUploadDir(os.tmpdir());
+
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, '..', '..', 'uploads')),
+  destination: (req, file, cb) => {
+    if (!FINAL_UPLOAD_DIR) return cb(new Error('No writable upload directory'));
+    cb(null, FINAL_UPLOAD_DIR);
+  },
   filename: (req, file, cb) => cb(null, `${uuidv4()}${path.extname(file.originalname)}`)
 });
 
@@ -43,7 +73,8 @@ router.post('/upload/:projectId', upload.array('photos', 20), (req, res) => {
         project_id: projectId,
         filename: file.filename,
         original_name: file.originalname,
-        filepath: `/uploads/${file.filename}`,
+        // store a relative path (no leading slash) so path.join works reliably
+        filepath: `uploads/${file.filename}`,
         photo_type: photo_type || 'site',
         latitude: latitude ? parseFloat(latitude) : null,
         longitude: longitude ? parseFloat(longitude) : null,

@@ -91,12 +91,13 @@ router.delete('/:id', (req, res) => {
     for (const photo of photos) {
       try {
         if (photo && photo.filepath) {
-          const fullPath = path.join(__dirname, '..', '..', photo.filepath);
+          // filepath is stored as relative like 'uploads/abc.jpg'
+          const fullPath = path.isAbsolute(photo.filepath) ? photo.filepath : path.join(__dirname, '..', '..', photo.filepath);
           if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
         }
       } catch (e) {
         // log and continue
-        console.warn('Failed to remove photo file', photo && photo.filepath, e.message);
+        console.warn('Failed to remove photo file', photo && photo.filepath, e && e.message ? e.message : e);
       }
     }
     db.remove('photos', { project_id: req.params.id });
