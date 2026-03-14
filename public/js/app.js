@@ -610,29 +610,19 @@ async function handlePhotoFiles(files) {
   if (!currentProject?.id) return showNotification('Save project first', 'error');
   if (!files.length) return;
 
-  const formData = new FormData();
-  for (const file of files) {
-    formData.append('photos', file);
+  // Ensure an upload queue container exists
+  let queueEl = document.getElementById('upload-queue');
+  if (!queueEl) {
+    queueEl = document.createElement('div');
+    queueEl.id = 'upload-queue';
+    queueEl.style.marginTop = '0.75rem';
+    const uploadZoneEl = document.getElementById('upload-zone') || document.body;
+    uploadZoneEl.insertAdjacentElement('afterend', queueEl);
   }
-  formData.append('photo_type', document.getElementById('photo-type').value);
-  formData.append('description', document.getElementById('photo-desc').value);
-  formData.append('tags', document.getElementById('photo-tags').value);
 
-  try {
-    showNotification('Uploading photos...');
-    const res = await fetch(`${API}/api/photos/upload/${currentProject.id}`, {
-      method: 'POST', body: formData
-    });
-    const data = await res.json();
-    if (data.success) {
-      if (!currentProject.photos) currentProject.photos = [];
-      currentProject.photos.push(...data.photos);
-      renderPhotos(currentProject.photos);
-      showNotification(`${data.photos.length} photo(s) uploaded!`, 'success');
-    }
-  } catch (err) {
-    showNotification('Upload error: ' + err.message, 'error');
-  }
+  // Build upload items and start processing
+  const fileItems = Array.from(files).map(f => ({ file: f, status: 'queued', attempts: 0, error: null }));
+  enqueueUploads(fileItems);
 }
 
 function renderPhotos(photos) {
@@ -650,6 +640,109 @@ function renderPhotos(photos) {
       </div>
     </div>
   `).join('');
+}
+
+// ─── Upload queue implementation ─────────────────────────────────────
+const UPLOAD_CONCURRENCY = 4;
+let uploadQueue = [];
+let uploadActive = 0;
+
+function enqueueUploads(items) {
+  uploadQueue.push(...items);
+  renderUploadQueue();
+  processUploadQueue();
+}
+
+function processUploadQueue() {
+  while (uploadActive < UPLOAD_CONCURRENCY && uploadQueue.some(i => i.status === 'queued' || i.status === 'retry')) {
+    const nextIdx = uploadQueue.findIndex(i => i.status === 'queued' || i.status === 'retry');
+    if (nextIdx === -1) break;
+    const item = uploadQueue[nextIdx];
+    item.status = 'uploading';
+    uploadActive++;
+    uploadSingle(item).finally(() => {
+      uploadActive--;
+      renderUploadQueue();
+      // continue processing
+      setTimeout(processUploadQueue, 0);
+    });
+  }
+}
+
+async function uploadSingle(item) {
+  item.attempts = (item.attempts || 0) + 1;
+  renderUploadQueue();
+
+  const formData = new FormData();
+  formData.append('photos', item.file);
+  formData.append('photo_type', document.getElementById('photo-type').value);
+  formData.append('description', document.getElementById('photo-desc').value);
+  formData.append('tags', document.getElementById('photo-tags').value);
+
+  try {
+    const res = await fetch(`${API}/api/photos/upload/${currentProject.id}`, { method: 'POST', body: formData });
+    const data = await res.json();
+    if (data && data.success && Array.isArray(data.photos) && data.photos.length > 0) {
+      // append returned photo(s) (should be one)
+      if (!currentProject.photos) currentProject.photos = [];
+      currentProject.photos.push(...data.photos);
+      renderPhotos(currentProject.photos);
+      item.status = 'done';
+      item.error = null;
+      showNotification(`Uploaded: ${item.file.name}`, 'success');
+    } else {
+      item.status = 'failed';
+      item.error = (data && data.error) ? data.error : 'Unknown server error';
+      showNotification(`Upload failed: ${item.file.name}`, 'error');
+    }
+  } catch (err) {
+    item.status = 'failed';
+    item.error = err.message;
+    showNotification(`Upload error: ${item.file.name} — ${err.message}`, 'error');
+  }
+}
+
+function renderUploadQueue() {
+  let queueEl = document.getElementById('upload-queue');
+  if (!queueEl) return;
+  queueEl.innerHTML = '';
+  if (!uploadQueue.length) return;
+
+  const list = document.createElement('div');
+  list.style.display = 'grid';
+  list.style.gridTemplateColumns = '1fr 120px 80px';
+  list.style.gap = '6px';
+
+  for (let i = 0; i < uploadQueue.length; i++) {
+    const it = uploadQueue[i];
+    const name = document.createElement('div');
+    name.textContent = it.file.name + ` (${Math.round(it.file.size/1024)} KB)`;
+
+    const status = document.createElement('div');
+    status.textContent = it.status === 'uploading' ? `Uploading (try ${it.attempts})` : it.status;
+    status.style.color = it.status === 'failed' ? '#b91c1c' : it.status === 'done' ? '#16a34a' : '#374151';
+
+    const actions = document.createElement('div');
+    if (it.status === 'failed') {
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-sm';
+      btn.textContent = 'Retry';
+      btn.onclick = () => { it.status = 'retry'; it.error = null; renderUploadQueue(); processUploadQueue(); };
+      actions.appendChild(btn);
+    } else if (it.status === 'done') {
+      const done = document.createElement('span'); done.textContent = '✓'; actions.appendChild(done);
+    } else if (it.status === 'uploading') {
+      const cancel = document.createElement('button'); cancel.className = 'btn btn-sm'; cancel.textContent = 'Cancel';
+      cancel.onclick = () => { it.status = 'cancelled'; renderUploadQueue(); };
+      actions.appendChild(cancel);
+    }
+
+    list.appendChild(name);
+    list.appendChild(status);
+    list.appendChild(actions);
+  }
+
+  queueEl.appendChild(list);
 }
 
 async function deletePhoto(id) {
