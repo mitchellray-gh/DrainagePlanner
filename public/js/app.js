@@ -282,6 +282,44 @@ document.getElementById('proj-autofill-btn')?.addEventListener('click', async ()
   }
 });
 
+// Find parcel (OSM Overpass) and draw polygon
+document.getElementById('proj-find-parcel-btn')?.addEventListener('click', async () => {
+  const addr = document.getElementById('proj-address').value.trim();
+  let lat = document.getElementById('proj-lat').value;
+  let lon = document.getElementById('proj-lng').value;
+  let url = `${API}/api/analysis/parcel`;
+  if (lat && lon) {
+    url += `?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
+  } else if (addr) {
+    url += `?address=${encodeURIComponent(addr)}`;
+  } else {
+    return showNotification('Enter an address or coordinates first', 'warning');
+  }
+
+  showNotification('Searching OSM for parcel/building...');
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    if (!data.success) return showNotification('Parcel lookup failed: ' + (data.error||'unknown'), 'error');
+    if (!data.found) return showNotification('No parcel/building polygon found nearby', 'warning');
+    const poly = data.polygon;
+    document.getElementById('proj-area').value = poly.area_sqft;
+    showNotification(`Parcel found — area ${poly.area_sqft} sqft (OSM)`, 'success');
+    // draw polygon on map
+    if (projectMap && poly.coords) {
+      try {
+        // remove previous parcel layer if present
+        if (window._parcelLayer) { projectMap.removeLayer(window._parcelLayer); }
+        const latlngs = poly.coords.map(c => [c[1], c[0]]);
+        window._parcelLayer = L.polygon(latlngs, { color: '#16a34a', weight: 2, fillOpacity: 0.15 }).addTo(projectMap);
+        projectMap.fitBounds(window._parcelLayer.getBounds(), { padding: [20,20] });
+      } catch (e) { console.debug('Draw parcel failed', e); }
+    }
+  } catch (err) {
+    showNotification('Parcel lookup error: ' + err.message, 'error');
+  }
+});
+
 // ─── STRUCTURES ──────────────────────────────────────────────────────
 let structureCounter = 0;
 

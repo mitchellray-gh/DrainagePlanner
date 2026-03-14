@@ -9,6 +9,7 @@ const DrainageEngine = require('../engine/drainageEngine');
 const TopographyEngine = require('../engine/topographyEngine');
 const SoilEngine = require('../engine/soilEngine');
 const xml2js = require('xml2js');
+const os = require('os');
 
 // elevation lookup (proxy) - supports ELEVATION_API_URL env var or falls back to Open-Elevation
 router.get('/elevation', async (req, res) => {
@@ -35,6 +36,83 @@ router.get('/elevation', async (req, res) => {
 
     const elevation_ft = +(elevation_m * 3.28084).toFixed(2);
     res.json({ success: true, elevation: { meters: elevation_m, feet: elevation_ft } });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Parcel lookup via Overpass (OpenStreetMap) - free option to find building polygons
+router.get('/parcel', async (req, res) => {
+  try {
+    let lat = parseFloat(req.query.lat);
+    let lon = parseFloat(req.query.lon);
+    const address = req.query.address;
+
+    if ((!lat || !lon) && !address) return res.status(400).json({ success: false, error: 'Provide lat/lon or address' });
+
+    // If address provided but no lat/lon, geocode with nominatim
+    if ((!lat || !lon) && address) {
+      const geoUrl = process.env.GEOCODE_API_URL || 'https://nominatim.openstreetmap.org/search?q={q}&format=json&addressdetails=1&limit=1';
+      const apiUrl = geoUrl.replace('{q}', encodeURIComponent(address));
+      const gresp = await fetch(apiUrl, { headers: { 'User-Agent': 'DrainagePlanner/1.0' } });
+      const gbody = await gresp.json();
+      if (!gbody || !gbody.length) return res.status(404).json({ success: false, error: 'Address not found' });
+      lat = parseFloat(gbody[0].lat);
+      lon = parseFloat(gbody[0].lon);
+    }
+
+    // Overpass query: find building ways/relations near the coordinate
+    const radius = parseInt(req.query.radius) || 30; // meters
+    const overpassUrl = process.env.OVERPASS_URL || 'https://overpass-api.de/api/interpreter';
+    // Query ways and relations with building tag around point
+    const query = `[
+out:json][timeout:25];
+(way(around:${radius},${lat},${lon})["building"];relation(around:${radius},${lat},${lon})["building"];);
+out body geom;`;
+
+    const oresp = await fetch(overpassUrl, { method: 'POST', body: query, headers: { 'Content-Type': 'text/plain' } });
+    if (!oresp.ok) return res.status(502).json({ success: false, error: 'Overpass API error' });
+    const obody = await oresp.json();
+    if (!obody || !obody.elements || !obody.elements.length) return res.json({ success: true, found: false });
+
+    // Choose the largest polygon (by estimated area)
+    function polygonAreaSqm(coords) {
+      if (!coords || coords.length < 3) return 0;
+      // approximate projection to local meters using centroid latitude
+      const R = 6371000;
+      const toRad = v => v * Math.PI / 180;
+      const lats = coords.map(c => c[1]);
+      const lat0 = lats.reduce((a,b) => a+b,0)/lats.length;
+      const cosLat = Math.cos(toRad(lat0));
+      const pts = coords.map(c => {
+        const x = R * toRad(c[0]) * cosLat;
+        const y = R * toRad(c[1]);
+        return [x,y];
+      });
+      // shoelace
+      let sum = 0;
+      for (let i=0;i<pts.length;i++){
+        const [x1,y1]=pts[i];
+        const [x2,y2]=pts[(i+1)%pts.length];
+        sum += x1*y2 - x2*y1;
+      }
+      return Math.abs(sum)/2;
+    }
+
+    const polygons = [];
+    for (const el of obody.elements) {
+      if (!el.geometry) continue;
+      // geometry is array of {lat,lon}
+      const coords = el.geometry.map(p => [p.lon, p.lat]);
+      const area_m2 = polygonAreaSqm(coords);
+      polygons.push({ id: el.id, area_m2, coords, tags: el.tags || {} });
+    }
+    if (!polygons.length) return res.json({ success: true, found: false });
+    polygons.sort((a,b) => b.area_m2 - a.area_m2);
+    const best = polygons[0];
+    const area_sqft = Math.round(best.area_m2 * 10.7639);
+
+    res.json({ success: true, found: true, polygon: { coords: best.coords, area_m2: best.area_m2, area_sqft, tags: best.tags } });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
