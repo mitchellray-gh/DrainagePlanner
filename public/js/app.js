@@ -557,6 +557,42 @@ function renderSurveyPoints(points) {
   `).join('');
 }
 
+// Remove all survey markers from the map and clear the marker array
+function clearSurveyMarkers() {
+  if (!surveyMarkers || surveyMarkers.length === 0) return;
+  for (const m of surveyMarkers) {
+    try { if (surveyMap && surveyMap.hasLayer(m)) surveyMap.removeLayer(m); } catch (e) { /* ignore */ }
+  }
+  surveyMarkers = [];
+}
+
+// Delete a survey point (called from the UI delete button)
+async function deleteSurveyPoint(id) {
+  if (!id) return;
+  if (!confirm('Delete this survey point?')) return;
+  if (!currentProject?.id) return showNotification('No project loaded', 'error');
+
+  try {
+    const res = await fetch(`${API}/api/projects/${currentProject.id}/survey-points/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (data.success) {
+      // remove locally
+      currentProject.surveyPoints = (currentProject.surveyPoints || []).filter(p => p.id !== id);
+      // refresh markers and table
+      clearSurveyMarkers();
+      if (currentProject.surveyPoints && currentProject.surveyPoints.length) {
+        for (const pt of currentProject.surveyPoints) addSurveyMarker(pt);
+      }
+      renderSurveyPoints(currentProject.surveyPoints || []);
+      showNotification('Survey point deleted', 'success');
+    } else {
+      showNotification('Delete failed: ' + (data.error || 'unknown'), 'error');
+    }
+  } catch (err) {
+    showNotification('Error deleting point: ' + err.message, 'error');
+  }
+}
+
 // ─── PHOTOS ──────────────────────────────────────────────────────────
 const uploadZone = document.getElementById('upload-zone');
 const photoInput = document.getElementById('photo-input');

@@ -160,6 +160,24 @@ router.post('/:id/survey-points', (req, res) => {
   }
 });
 
+// DELETE single survey point
+router.delete('/:id/survey-points/:pointId', (req, res) => {
+  try {
+    const project = db.findById('projects', req.params.id);
+    if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
+
+    const point = db.findById('survey_points', req.params.pointId);
+    if (!point || point.project_id !== req.params.id) {
+      return res.status(404).json({ success: false, error: 'Survey point not found' });
+    }
+
+    db.removeById('survey_points', req.params.pointId);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // POST add property boundary
 router.post('/:id/boundaries', (req, res) => {
   try {
