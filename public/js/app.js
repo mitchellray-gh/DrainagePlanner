@@ -643,7 +643,9 @@ function renderPhotos(photos) {
 }
 
 // ─── Upload queue implementation ─────────────────────────────────────
-const UPLOAD_CONCURRENCY = 4;
+// Upload files one-at-a-time and automatically retry failures
+const UPLOAD_CONCURRENCY = 1; // single-threaded upload per user request
+const MAX_UPLOAD_RETRIES = 3;
 let uploadQueue = [];
 let uploadActive = 0;
 
@@ -670,36 +672,51 @@ function processUploadQueue() {
 }
 
 async function uploadSingle(item) {
-  item.attempts = (item.attempts || 0) + 1;
+  item.attempts = (item.attempts || 0);
   renderUploadQueue();
 
-  const formData = new FormData();
-  formData.append('photos', item.file);
-  formData.append('photo_type', document.getElementById('photo-type').value);
-  formData.append('description', document.getElementById('photo-desc').value);
-  formData.append('tags', document.getElementById('photo-tags').value);
+  const formDataBase = () => {
+    const fd = new FormData();
+    fd.append('photos', item.file);
+    fd.append('photo_type', document.getElementById('photo-type').value);
+    fd.append('description', document.getElementById('photo-desc').value);
+    fd.append('tags', document.getElementById('photo-tags').value);
+    return fd;
+  };
 
-  try {
-    const res = await fetch(`${API}/api/photos/upload/${currentProject.id}`, { method: 'POST', body: formData });
-    const data = await res.json();
-    if (data && data.success && Array.isArray(data.photos) && data.photos.length > 0) {
-      // append returned photo(s) (should be one)
-      if (!currentProject.photos) currentProject.photos = [];
-      currentProject.photos.push(...data.photos);
-      renderPhotos(currentProject.photos);
-      item.status = 'done';
-      item.error = null;
-      showNotification(`Uploaded: ${item.file.name}`, 'success');
-    } else {
-      item.status = 'failed';
-      item.error = (data && data.error) ? data.error : 'Unknown server error';
-      showNotification(`Upload failed: ${item.file.name}`, 'error');
+  let lastError = null;
+  for (let attempt = 1; attempt <= MAX_UPLOAD_RETRIES; attempt++) {
+    item.attempts = attempt;
+    item.status = attempt === 1 ? 'uploading' : `retrying (${attempt})`;
+    renderUploadQueue();
+
+    try {
+      const res = await fetch(`${API}/api/photos/upload/${currentProject.id}`, { method: 'POST', body: formDataBase() });
+      const data = await res.json();
+      if (data && data.success && Array.isArray(data.photos) && data.photos.length > 0) {
+        if (!currentProject.photos) currentProject.photos = [];
+        currentProject.photos.push(...data.photos);
+        renderPhotos(currentProject.photos);
+        item.status = 'done';
+        item.error = null;
+        showNotification(`Uploaded: ${item.file.name}`, 'success');
+        return;
+      } else {
+        lastError = (data && data.error) ? data.error : 'Unknown server error';
+        item.error = lastError;
+      }
+    } catch (err) {
+      lastError = err.message;
+      item.error = lastError;
     }
-  } catch (err) {
-    item.status = 'failed';
-    item.error = err.message;
-    showNotification(`Upload error: ${item.file.name} — ${err.message}`, 'error');
+
+    // small backoff before retrying
+    await new Promise(r => setTimeout(r, 400));
   }
+
+  // If we reach here, all retries failed
+  item.status = 'failed';
+  showNotification(`Failed to upload ${item.file.name}: ${item.error || lastError}`, 'error');
 }
 
 function renderUploadQueue() {
@@ -723,18 +740,15 @@ function renderUploadQueue() {
     status.style.color = it.status === 'failed' ? '#b91c1c' : it.status === 'done' ? '#16a34a' : '#374151';
 
     const actions = document.createElement('div');
-    if (it.status === 'failed') {
-      const btn = document.createElement('button');
-      btn.className = 'btn btn-sm';
-      btn.textContent = 'Retry';
-      btn.onclick = () => { it.status = 'retry'; it.error = null; renderUploadQueue(); processUploadQueue(); };
-      actions.appendChild(btn);
-    } else if (it.status === 'done') {
+    // Auto-retry behavior: no manual retry button is shown. Allow cancel while uploading.
+    if (it.status === 'done') {
       const done = document.createElement('span'); done.textContent = '✓'; actions.appendChild(done);
-    } else if (it.status === 'uploading') {
+    } else if (it.status === 'uploading' || it.status.startsWith('retrying')) {
       const cancel = document.createElement('button'); cancel.className = 'btn btn-sm'; cancel.textContent = 'Cancel';
       cancel.onclick = () => { it.status = 'cancelled'; renderUploadQueue(); };
       actions.appendChild(cancel);
+    } else if (it.status === 'failed') {
+      const info = document.createElement('span'); info.textContent = 'Failed'; info.style.color = '#b91c1c'; actions.appendChild(info);
     }
 
     list.appendChild(name);
