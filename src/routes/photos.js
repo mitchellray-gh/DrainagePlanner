@@ -68,13 +68,21 @@ router.post('/upload/:projectId', upload.array('photos', 20), (req, res) => {
 
     for (const file of req.files) {
       const id = uuidv4();
+      // Decide what URL to expose for the stored file. If the FINAL_UPLOAD_DIR is the repo's ./uploads
+      // directory (the same one mounted by server static middleware), expose via /uploads/<filename>.
+      // Otherwise expose via an API file route we provide below.
+      const repoUploadsDir = path.join(__dirname, '..', '..', 'uploads');
+      const exposedPath = (FINAL_UPLOAD_DIR && path.resolve(FINAL_UPLOAD_DIR) === path.resolve(repoUploadsDir))
+        ? `/uploads/${file.filename}`
+        : `/api/photos/file/${file.filename}`;
+
       const photo = db.insert('photos', {
         id,
         project_id: projectId,
         filename: file.filename,
         original_name: file.originalname,
-        // store a relative path (no leading slash) so path.join works reliably
-        filepath: `uploads/${file.filename}`,
+        // store the URL path the client should use to fetch the image
+        filepath: exposedPath,
         photo_type: photo_type || 'site',
         latitude: latitude ? parseFloat(latitude) : null,
         longitude: longitude ? parseFloat(longitude) : null,
@@ -129,3 +137,18 @@ router.delete('/:id', (req, res) => {
 });
 
 module.exports = router;
+
+// Serve files from the actual upload directory when it's outside the repo uploads folder
+// e.g., when we fell back to os.tmpdir(). This route streams files by filename.
+router.get('/file/:filename', (req, res) => {
+  try {
+    if (!FINAL_UPLOAD_DIR) return res.status(404).send('File storage not available');
+    const filename = req.params.filename;
+    const safeName = path.basename(filename);
+    const fullPath = path.join(FINAL_UPLOAD_DIR, safeName);
+    if (!fs.existsSync(fullPath)) return res.status(404).send('Not found');
+    res.sendFile(fullPath);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
