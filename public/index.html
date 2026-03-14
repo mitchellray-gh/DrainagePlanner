@@ -107,7 +107,10 @@
         </div>
         <div class="form-group full-width">
           <label for="proj-address">Property Address</label>
-          <input type="text" id="proj-address" placeholder="123 Main St, City, State ZIP">
+          <div style="display:flex;gap:0.5rem;align-items:center;">
+            <input type="text" id="proj-address" placeholder="123 Main St, City, State ZIP" style="flex:1;">
+            <button type="button" id="proj-autofill-btn" class="btn btn-outline">Auto-fill from Address</button>
+          </div>
         </div>
         <div class="form-group">
           <label for="proj-lat">Latitude</label>

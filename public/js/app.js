@@ -255,6 +255,31 @@ document.getElementById('project-form').addEventListener('submit', async (e) => 
   }
 });
 
+// Auto-fill project location from address
+document.getElementById('proj-autofill-btn')?.addEventListener('click', async () => {
+  const addr = document.getElementById('proj-address').value.trim();
+  if (!addr) return showNotification('Enter an address first', 'warning');
+  showNotification('Looking up address...');
+  try {
+    const res = await fetch(`${API}/api/analysis/geocode?address=${encodeURIComponent(addr)}`);
+    const data = await res.json();
+    if (!data.success) return showNotification('Geocode failed: ' + (data.error || 'unknown'), 'error');
+    if (!data.result) return showNotification('No results found', 'warning');
+    const r = data.result;
+    document.getElementById('proj-address').value = r.display_name || addr;
+    document.getElementById('proj-lat').value = r.lat.toFixed(6);
+    document.getElementById('proj-lng').value = r.lon.toFixed(6);
+    if (r.approx_area_sqft) document.getElementById('proj-area').value = r.approx_area_sqft;
+    showNotification('Address filled: ' + (r.display_name || addr), 'success');
+    // center the project map if initialized
+    if (projectMap) {
+      try { projectMap.setView([r.lat, r.lon], 17); } catch (e) { /* ignore */ }
+    }
+  } catch (err) {
+    showNotification('Geocode error: ' + err.message, 'error');
+  }
+});
+
 // ─── STRUCTURES ──────────────────────────────────────────────────────
 let structureCounter = 0;
 

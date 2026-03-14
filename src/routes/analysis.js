@@ -39,6 +39,48 @@ router.get('/elevation', async (req, res) => {
   }
 });
 
+// Geocode address -> lat/lon (proxy). Uses Nominatim by default; override with GEOCODE_API_URL env var.
+router.get('/geocode', async (req, res) => {
+  try {
+    const address = req.query.address;
+    if (!address) return res.status(400).json({ success: false, error: 'address query required' });
+
+    const apiTemplate = process.env.GEOCODE_API_URL || 'https://nominatim.openstreetmap.org/search?q={q}&format=json&addressdetails=1&limit=1';
+    const apiUrl = apiTemplate.replace('{q}', encodeURIComponent(address));
+
+    const resp = await fetch(apiUrl, { headers: { 'User-Agent': 'DrainagePlanner/1.0 (+https://github.com/mitchellray-gh/DrainagePlanner)' } });
+    if (!resp.ok) return res.status(502).json({ success: false, error: 'Geocode service error' });
+    const body = await resp.json();
+    if (!body || !body.length) return res.json({ success: true, results: [] });
+
+    const best = body[0];
+    // boundingbox is [south, north, west, east] in many responses (Nominatim gives [south, north, west, east] as strings)
+    const bbox = best.boundingbox ? best.boundingbox.map(parseFloat) : null;
+    let approx_area_sqft = null;
+    if (bbox && bbox.length === 4) {
+      // bbox: [south, north, west, east]
+      const south = bbox[0], north = bbox[1], west = bbox[2], east = bbox[3];
+      // approximate distances in meters
+      const R = 6371000; // earth radius m
+      const toRad = v => v * Math.PI / 180;
+      const latDist = R * Math.abs(Math.sin(toRad(north)) - Math.sin(toRad(south))); // rough north-south
+      const lonDist = R * Math.cos(toRad((north + south) / 2)) * toRad(Math.abs(east - west));
+      const area_m2 = Math.abs(latDist * lonDist);
+      approx_area_sqft = +(area_m2 * 10.7639).toFixed(0);
+    }
+
+    res.json({ success: true, result: {
+      display_name: best.display_name,
+      lat: parseFloat(best.lat),
+      lon: parseFloat(best.lon),
+      boundingbox: bbox,
+      approx_area_sqft
+    }});
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // POST run full site analysis
 router.post('/full/:projectId', (req, res) => {
   try {
