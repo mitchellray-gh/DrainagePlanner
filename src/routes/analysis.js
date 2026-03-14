@@ -44,6 +44,29 @@ router.get('/geocode', async (req, res) => {
   try {
     const address = req.query.address;
     if (!address) return res.status(400).json({ success: false, error: 'address query required' });
+    const provider = (process.env.GEOCODE_PROVIDER || 'nominatim').toLowerCase();
+
+    if (provider === 'zillow' || req.query.provider === 'zillow') {
+      // Use Zillow Deep Search (XML) — requires ZWSID in env var ZILLOW_ZWSID
+      const zwsid = process.env.ZILLOW_ZWSID || req.query.zwsid;
+      if (!zwsid) return res.status(400).json({ success: false, error: 'Zillow ZWSID required (set ZILLOW_ZWSID env var)' });
+      // Zillow expects address and citystatezip split; we'll try to pass the whole address into address and empty citystatezip
+      const base = process.env.ZILLOW_API_URL || 'http://www.zillow.com/webservice/GetDeepSearchResults.htm';
+      const url = `${base}?zws-id=${encodeURIComponent(zwsid)}&address=${encodeURIComponent(address)}&citystatezip=`;
+      const resp = await fetch(url);
+      const text = await resp.text();
+      // Try to extract some useful fields from the XML response (lot size / finished area)
+      const lotMatch = text.match(/<lotSizeSqFt>(.*?)<\//i) || text.match(/<lotSize>(.*?)<\//i) || text.match(/<lotSizeSquareFeet>(.*?)<\//i);
+      const lotSqFt = lotMatch ? parseInt(lotMatch[1].replace(/[^0-9]/g, '')) : null;
+      const latMatch = text.match(/<latitude>(.*?)<\//i);
+      const lonMatch = text.match(/<longitude>(.*?)<\//i);
+      const lat = latMatch ? parseFloat(latMatch[1]) : null;
+      const lon = lonMatch ? parseFloat(lonMatch[1]) : null;
+      const displayMatch = text.match(/<homedetails>(.*?)<\//i) || text.match(/<address>([\s\S]*?)<\/address>/i);
+      const display_name = displayMatch ? (displayMatch[1].replace(/<[^>]+>/g, '').trim()) : address;
+
+      return res.json({ success: true, result: { display_name, lat, lon, approx_area_sqft: lotSqFt } });
+    }
 
     const apiTemplate = process.env.GEOCODE_API_URL || 'https://nominatim.openstreetmap.org/search?q={q}&format=json&addressdetails=1&limit=1';
     const apiUrl = apiTemplate.replace('{q}', encodeURIComponent(address));

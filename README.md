@@ -78,3 +78,19 @@ MIT
 Credits
 - Designed for rapid prototyping of residential drainage plans.
 
+Environment & external services
+-- You can configure geocoding and elevation providers via environment variables. By default the app uses OpenStreetMap Nominatim for geocoding and Open-Elevation for elevation lookups. For production use you should provide a commercial geocoding provider or a parcel API for accurate property area data.
+
+- GEOCODE_API_URL: override the default geocode URL template. Use {q} as a placeholder for the address. Example for Google Maps (note: you must include your API key):
+	- "https://maps.googleapis.com/maps/api/geocode/json?address={q}&key=YOUR_API_KEY"
+- GEOCODE_PROVIDER: set to "zillow" to use Zillow DeepSearchResults (requires ZILLOW_ZWSID). If set to "zillow" the backend will attempt to extract lot size information from Zillow's response.
+- ZILLOW_ZWSID: your Zillow Web Services ID (required if GEOCODE_PROVIDER=zillow). Zillow responses are XML and may include lot size fields when available.
+- ELEVATION_API_URL: override elevation lookup. Default: Open-Elevation
+	- Example: "https://api.open-elevation.com/api/v1/lookup?locations={lat},{lng}"
+- DB_DIR / DB_FALLBACK_DIR: configure where the JSON database should be persisted. If the configured DB directory is not writable (for example in some container/serverless environments), the app will fallback to `DB_FALLBACK_DIR` or the system temp directory and, if necessary, operate in-memory (non-persistent).
+- UPLOAD_DIR / UPLOAD_FALLBACK_DIR: configure a writable uploads directory for photos. If not writable the server will fallback to a writable temp dir.
+
+Security & usage notes
+- Public/free geocoding services (OpenStreetMap/Nominatim, Open-Elevation) are rate-limited and not suitable for high-volume production. Use a paid provider (Google, Mapbox, Bing) or a commercial parcel API for reliable parcel boundaries and lot area.
+- Zillow's API may return lot/parcel measurements for certain properties but the field availability is not guaranteed. Always verify returned parcel areas against authoritative local data (county assessor or parcel API) before using them for design or costing.
+
