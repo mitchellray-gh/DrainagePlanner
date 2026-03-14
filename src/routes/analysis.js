@@ -8,6 +8,7 @@ const db = require('../models/database');
 const DrainageEngine = require('../engine/drainageEngine');
 const TopographyEngine = require('../engine/topographyEngine');
 const SoilEngine = require('../engine/soilEngine');
+const xml2js = require('xml2js');
 
 // elevation lookup (proxy) - supports ELEVATION_API_URL env var or falls back to Open-Elevation
 router.get('/elevation', async (req, res) => {
@@ -50,22 +51,107 @@ router.get('/geocode', async (req, res) => {
       // Use Zillow Deep Search (XML) — requires ZWSID in env var ZILLOW_ZWSID
       const zwsid = process.env.ZILLOW_ZWSID || req.query.zwsid;
       if (!zwsid) return res.status(400).json({ success: false, error: 'Zillow ZWSID required (set ZILLOW_ZWSID env var)' });
-      // Zillow expects address and citystatezip split; we'll try to pass the whole address into address and empty citystatezip
       const base = process.env.ZILLOW_API_URL || 'http://www.zillow.com/webservice/GetDeepSearchResults.htm';
       const url = `${base}?zws-id=${encodeURIComponent(zwsid)}&address=${encodeURIComponent(address)}&citystatezip=`;
       const resp = await fetch(url);
       const text = await resp.text();
-      // Try to extract some useful fields from the XML response (lot size / finished area)
-      const lotMatch = text.match(/<lotSizeSqFt>(.*?)<\//i) || text.match(/<lotSize>(.*?)<\//i) || text.match(/<lotSizeSquareFeet>(.*?)<\//i);
-      const lotSqFt = lotMatch ? parseInt(lotMatch[1].replace(/[^0-9]/g, '')) : null;
-      const latMatch = text.match(/<latitude>(.*?)<\//i);
-      const lonMatch = text.match(/<longitude>(.*?)<\//i);
-      const lat = latMatch ? parseFloat(latMatch[1]) : null;
-      const lon = lonMatch ? parseFloat(lonMatch[1]) : null;
-      const displayMatch = text.match(/<homedetails>(.*?)<\//i) || text.match(/<address>([\s\S]*?)<\/address>/i);
-      const display_name = displayMatch ? (displayMatch[1].replace(/<[^>]+>/g, '').trim()) : address;
 
-      return res.json({ success: true, result: { display_name, lat, lon, approx_area_sqft: lotSqFt } });
+      // Parse XML with xml2js for reliable extraction
+      let parsed = null;
+      try {
+        parsed = await xml2js.parseStringPromise(text, { explicitArray: false, mergeAttrs: true });
+      } catch (e) {
+        // fallback: return raw text info
+        console.warn('Zillow XML parse failed', e && e.message ? e.message : e);
+        return res.json({ success: true, result: { display_name: address, raw: text } });
+      }
+
+      // Navigate to result object if present
+      const result = parsed && parsed['searchresults'] && parsed['searchresults'].response && parsed['searchresults'].response.results && parsed['searchresults'].response.results.result
+        ? parsed['searchresults'].response.results.result
+        : (parsed && parsed['searchresults'] && parsed['searchresults'].response && parsed['searchresults'].response.results) || null;
+
+      // helper to find nested keys
+      function deepFind(obj, keyNames) {
+        if (!obj) return null;
+        if (typeof keyNames === 'string') keyNames = [keyNames];
+        for (const k of keyNames) {
+          if (obj[k]) return obj[k];
+        }
+        // recurse
+        for (const v of Object.values(obj)) {
+          if (v && typeof v === 'object') {
+            const found = deepFind(v, keyNames);
+            if (found) return found;
+          }
+        }
+        return null;
+      }
+
+      const lotCandidates = ['lotSizeSqFt', 'lotSize', 'lotSizeSquareFeet', 'lot_size_sqft'];
+      const lotVal = deepFind(result, lotCandidates);
+      const lotSqFt = lotVal ? parseInt(('' + lotVal).replace(/[^0-9]/g, '')) : null;
+
+      const latVal = deepFind(result, ['latitude', 'lat']);
+      const lonVal = deepFind(result, ['longitude', 'lng', 'lon']);
+      const lat = latVal ? parseFloat(latVal) : null;
+      const lon = lonVal ? parseFloat(lonVal) : null;
+
+      let display_name = address;
+      const addrObj = deepFind(result, ['address', 'formattedAddress', 'homedetails']);
+      if (addrObj) {
+        if (typeof addrObj === 'string') display_name = addrObj;
+        else if (addrObj.street) display_name = `${addrObj.street} ${addrObj.city || ''} ${addrObj.state || ''}`.trim();
+      }
+
+      return res.json({ success: true, result: { display_name, lat, lon, approx_area_sqft: lotSqFt, provider: 'zillow' } });
+    }
+
+    // Google Geocoding
+    if (provider === 'google' || req.query.provider === 'google') {
+      const key = process.env.GOOGLE_API_KEY || req.query.key;
+      if (!key) return res.status(400).json({ success: false, error: 'Google API key required (set GOOGLE_API_KEY env var)' });
+      const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${encodeURIComponent(key)}`;
+      const resp = await fetch(apiUrl);
+      if (!resp.ok) return res.status(502).json({ success: false, error: 'Google geocode error' });
+      const body = await resp.json();
+      if (!body || !body.results || !body.results.length) return res.json({ success: true, results: [] });
+      const best = body.results[0];
+      const lat = best.geometry.location.lat;
+      const lon = best.geometry.location.lng;
+      let approx_area_sqft = null;
+      if (best.geometry.viewport) {
+        const ne = best.geometry.viewport.northeast;
+        const sw = best.geometry.viewport.southwest;
+        const R = 6371000; const toRad = v=>v*Math.PI/180;
+        const latDist = R * Math.abs(Math.sin(toRad(ne.lat)) - Math.sin(toRad(sw.lat)));
+        const lonDist = R * Math.cos(toRad((ne.lat+sw.lat)/2)) * toRad(Math.abs(ne.lng - sw.lng));
+        approx_area_sqft = Math.round(Math.abs(latDist*lonDist)*10.7639);
+      }
+      return res.json({ success: true, result: { display_name: best.formatted_address, lat, lon, approx_area_sqft, provider: 'google' } });
+    }
+
+    // Mapbox
+    if (provider === 'mapbox' || req.query.provider === 'mapbox') {
+      const key = process.env.MAPBOX_API_KEY || req.query.key;
+      if (!key) return res.status(400).json({ success: false, error: 'Mapbox API key required (set MAPBOX_API_KEY env var)' });
+      const apiUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${encodeURIComponent(key)}&limit=1`;
+      const resp = await fetch(apiUrl);
+      if (!resp.ok) return res.status(502).json({ success: false, error: 'Mapbox geocode error' });
+      const body = await resp.json();
+      if (!body || !body.features || !body.features.length) return res.json({ success: true, results: [] });
+      const f = body.features[0];
+      const lon = f.center && f.center[0];
+      const lat = f.center && f.center[1];
+      let approx_area_sqft = null;
+      if (f.bbox && f.bbox.length === 4) {
+        const west = f.bbox[0], south = f.bbox[1], east = f.bbox[2], north = f.bbox[3];
+        const R = 6371000; const toRad = v=>v*Math.PI/180;
+        const latDist = R * Math.abs(Math.sin(toRad(north)) - Math.sin(toRad(south)));
+        const lonDist = R * Math.cos(toRad((north+south)/2)) * toRad(Math.abs(east - west));
+        approx_area_sqft = Math.round(Math.abs(latDist*lonDist)*10.7639);
+      }
+      return res.json({ success: true, result: { display_name: f.place_name, lat, lon, approx_area_sqft, provider: 'mapbox' } });
     }
 
     const apiTemplate = process.env.GEOCODE_API_URL || 'https://nominatim.openstreetmap.org/search?q={q}&format=json&addressdetails=1&limit=1';

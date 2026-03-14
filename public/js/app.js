@@ -261,7 +261,8 @@ document.getElementById('proj-autofill-btn')?.addEventListener('click', async ()
   if (!addr) return showNotification('Enter an address first', 'warning');
   showNotification('Looking up address...');
   try {
-    const res = await fetch(`${API}/api/analysis/geocode?address=${encodeURIComponent(addr)}`);
+    const provider = document.getElementById('proj-geocode-provider')?.value || '';
+    const res = await fetch(`${API}/api/analysis/geocode?address=${encodeURIComponent(addr)}${provider ? '&provider='+encodeURIComponent(provider) : ''}`);
     const data = await res.json();
     if (!data.success) return showNotification('Geocode failed: ' + (data.error || 'unknown'), 'error');
     if (!data.result) return showNotification('No results found', 'warning');
@@ -270,7 +271,8 @@ document.getElementById('proj-autofill-btn')?.addEventListener('click', async ()
     document.getElementById('proj-lat').value = r.lat.toFixed(6);
     document.getElementById('proj-lng').value = r.lon.toFixed(6);
     if (r.approx_area_sqft) document.getElementById('proj-area').value = r.approx_area_sqft;
-    showNotification('Address filled: ' + (r.display_name || addr), 'success');
+    const used = r.provider || provider || (data.provider || 'nominatim');
+    showNotification('Address filled: ' + (r.display_name || addr) + ` (provider: ${used})`, 'success');
     // center the project map if initialized
     if (projectMap) {
       try { projectMap.setView([r.lat, r.lon], 17); } catch (e) { /* ignore */ }

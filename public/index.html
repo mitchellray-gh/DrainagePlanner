@@ -107,8 +107,14 @@
         </div>
         <div class="form-group full-width">
           <label for="proj-address">Property Address</label>
-          <div style="display:flex;gap:0.5rem;align-items:center;">
+            <div style="display:flex;gap:0.5rem;align-items:center;">
             <input type="text" id="proj-address" placeholder="123 Main St, City, State ZIP" style="flex:1;">
+            <select id="proj-geocode-provider" style="width:160px;padding:0.4rem;border-radius:6px;border:1px solid #cbd5e1;background:#fff;color:#0f172a;">
+              <option value="nominatim">Nominatim (OSM)</option>
+              <option value="google">Google Geocoding</option>
+              <option value="mapbox">Mapbox</option>
+              <option value="zillow">Zillow (parcel)</option>
+            </select>
             <button type="button" id="proj-autofill-btn" class="btn btn-outline">Auto-fill from Address</button>
           </div>
         </div>
