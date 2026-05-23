@@ -14,6 +14,7 @@ const photoRoutes = require('./routes/photos');
 const analysisRoutes = require('./routes/analysis');
 const planRoutes = require('./routes/plans');
 const reportRoutes = require('./routes/reports');
+const chatRoutes = require('./routes/chat');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,10 +32,12 @@ app.use('/api/photos', photoRoutes);
 app.use('/api/analysis', analysisRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/chat', chatRoutes);
 
-// Serve main app
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+// Serve React app (SPA fallback)
+app.get('*', (req, res) => {
+  const indexPath = path.join(__dirname, '..', 'public', 'index.html');
+  res.sendFile(indexPath);
 });
 
 // Initialize database and start
