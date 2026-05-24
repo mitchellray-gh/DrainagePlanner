@@ -11,6 +11,7 @@ import Landscaping from './pages/Landscaping'
 import Report from './pages/Report'
 import ChatOverlay from './components/ChatOverlay'
 import Toast from './components/Toast'
+import useDrainageAI from './hooks/useDrainageAI'
 
 const PANELS = [
   { id: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
@@ -29,6 +30,7 @@ export default function App() {
   const [currentPlan, setCurrentPlan] = useState(null)
   const [toasts, setToasts] = useState([])
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const ai = useDrainageAI()
 
   const showNotification = useCallback((message, type = 'info') => {
     const id = Date.now()
@@ -42,7 +44,7 @@ export default function App() {
   }, [])
 
   const renderPanel = () => {
-    const props = { currentProject, setCurrentProject, currentPlan, setCurrentPlan, showNotification, navigate }
+    const props = { currentProject, setCurrentProject, currentPlan, setCurrentPlan, showNotification, navigate, ai }
     switch (activePanel) {
       case 'dashboard': return <Dashboard {...props} />
       case 'project': return <ProjectSetup {...props} />
@@ -99,7 +101,7 @@ export default function App() {
       </main>
 
       {/* Chat Overlay */}
-      <ChatOverlay />
+      <ChatOverlay ai={ai} currentProject={currentProject} />
 
       {/* Toasts */}
       <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-2">

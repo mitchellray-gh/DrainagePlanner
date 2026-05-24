@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X, Send, Leaf, Loader2 } from 'lucide-react'
+import { MessageCircle, X, Send, Leaf, Loader2, Brain } from 'lucide-react'
 
-export default function ChatOverlay() {
+export default function ChatOverlay({ ai, currentProject }) {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: "Hi! I'm your landscaping & drainage assistant. Ask me about rain gardens, French drains, native plants, erosion control, soil types, grading, or anything outdoor-related! 🌿" }
+    { role: 'assistant', content: "Hi! I'm your landscaping & drainage assistant. Ask me about rain gardens, French drains, native plants, erosion control, soil types, grading, or anything outdoor-related! 🌿\n\nI also have an AI model that can predict recommended drainage elements for your project." }
   ])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -21,6 +21,28 @@ export default function ChatOverlay() {
     setInput('')
     setMessages(prev => [...prev, { role: 'user', content: userMsg }])
     setLoading(true)
+
+    // Check if user is asking for AI predictions
+    const lowerMsg = userMsg.toLowerCase()
+    if ((lowerMsg.includes('predict') || lowerMsg.includes('recommend') || lowerMsg.includes('ai') || lowerMsg.includes('suggest')) && ai?.isReady && currentProject) {
+      const predictions = ai.getPredictions(currentProject)
+      if (predictions) {
+        const recommended = predictions.filter(p => p.recommended)
+        let reply = '🧠 **AI Model Predictions** for your project:\n\n'
+        if (recommended.length > 0) {
+          reply += recommended.map(p => `✅ ${p.label} (${(p.confidence * 100).toFixed(0)}% confidence)`).join('\n')
+          reply += '\n\nOther considerations:\n'
+          reply += predictions.filter(p => !p.recommended).map(p => `• ${p.label} (${(p.confidence * 100).toFixed(0)}%)`).join('\n')
+        } else {
+          reply += 'Model confidence is low for all element types. Consider:\n'
+          reply += predictions.slice(0, 3).map(p => `• ${p.label} (${(p.confidence * 100).toFixed(0)}%)`).join('\n')
+          reply += '\n\nTry retraining the model with more project data for better predictions.'
+        }
+        setMessages(prev => [...prev, { role: 'assistant', content: reply }])
+        setLoading(false)
+        return
+      }
+    }
 
     try {
       const res = await fetch('/api/chat', {
@@ -68,10 +90,16 @@ export default function ChatOverlay() {
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                 <Leaf size={16} className="text-white" />
               </div>
-              <div>
+              <div className="flex-1">
                 <div className="text-white font-semibold text-sm">Outdoor Assistant</div>
                 <div className="text-white/70 text-xs">Landscaping · Drainage · Grading</div>
               </div>
+              {ai?.isReady && (
+                <div className="flex items-center gap-1 bg-white/10 px-2 py-1 rounded-full">
+                  <Brain size={10} className="text-green-300" />
+                  <span className="text-[10px] text-green-300 font-medium">AI</span>
+                </div>
+              )}
             </div>
 
             {/* Messages */}

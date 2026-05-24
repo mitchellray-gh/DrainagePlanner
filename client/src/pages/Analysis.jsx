@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { FlaskConical, Droplets, Loader2 } from 'lucide-react'
 import { apiPost } from '../lib/api'
+import AIRecommendations from '../components/AIRecommendations'
 
-export default function Analysis({ currentProject, showNotification }) {
+export default function Analysis({ currentProject, showNotification, ai }) {
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -57,7 +58,7 @@ export default function Analysis({ currentProject, showNotification }) {
       </div>
 
       {results && (
-        <div className="section-card">
+        <div className="section-card mb-6">
           <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
             <Droplets size={18} className="text-brand-600" /> Analysis Results
           </h3>
@@ -66,6 +67,9 @@ export default function Analysis({ currentProject, showNotification }) {
           </pre>
         </div>
       )}
+
+      {/* AI Recommendations */}
+      {ai && <AIRecommendations ai={ai} currentProject={currentProject} />}
     </motion.div>
   )
 }
