@@ -15,6 +15,7 @@ const analysisRoutes = require('./routes/analysis');
 const planRoutes = require('./routes/plans');
 const reportRoutes = require('./routes/reports');
 const chatRoutes = require('./routes/chat');
+const aiRoutes = require('./routes/ai');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,6 +34,7 @@ app.use('/api/analysis', analysisRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Serve React app (SPA fallback)
 app.get('*', (req, res) => {
