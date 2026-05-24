@@ -1,8 +1,18 @@
-# 🌧️ DrainagePlanner Pro
+# 🌧️ DrainagePlanner Pro v2.0
 
 An integrated yard drainage planning app that blends construction management, land surveying, and landscape design expertise into a single, opinionated toolset.
 
-This repository contains a self-hosted Node.js + Express server and a simple browser-based frontend (Leaflet) for: project setup, survey point capture, photo upload, runoff analysis, drainage plan generation, and print-ready HTML reports.
+**Now with a modern React frontend, mobile-first responsive design, interactive maps, and an AI chat assistant!**
+
+## What's New in v2.0
+
+- 🎨 **Modern React UI** — Built with React 18, Vite, and Tailwind CSS
+- 📱 **Mobile-First Design** — Fully responsive with collapsible sidebar and touch-friendly controls
+- 🗺️ **Interactive Maps** — Click-to-place survey points with react-leaflet
+- 📍 **GPS Integration** — Use device GPS to auto-locate and fetch elevation
+- 💬 **AI Chat Assistant** — Conversational help for landscaping, drainage, and outdoor projects (bottom-right overlay)
+- ✨ **Beautiful UI** — Glassmorphism cards, smooth animations with Framer Motion, Lucide icons
+- 🔥 **Fast Dev Experience** — Vite HMR with API proxy to Express backend
 
 Why this project
 -- It speeds up preliminary site assessments for property owners and contractors.
@@ -23,14 +33,36 @@ Quick start (local)
 # from project root
 npm install
 
-# start the server (default: http://localhost:3000)
-npm start
+# install client dependencies
+npm run client:install
 
-# development (if you have nodemon)
-npm run dev
+# build the React frontend (outputs to public/)
+npm run build
+
+# start the server (serves API + React app at http://localhost:3000)
+npm start
 ```
 
-Open http://localhost:3000 in your browser.
+### Development (hot-reload)
+
+```bash
+# Terminal 1: Start the Express API server
+npm run dev
+
+# Terminal 2: Start Vite dev server (with API proxy)
+npm run client:dev
+```
+
+Then open http://localhost:5173 for the Vite dev server (with HMR), or http://localhost:3000 for the Express server.
+
+### Environment Variables
+
+For the AI Chat Assistant:
+```bash
+OPENAI_API_KEY=sk-...         # Required for full AI chat (falls back to built-in responses)
+CHAT_API_URL=https://...      # Optional: custom OpenAI-compatible endpoint
+CHAT_MODEL=gpt-3.5-turbo     # Optional: model to use
+```
 
 Notes about the current build
 - The project originally used a native SQLite binding; to avoid native build issues this branch uses a small JSON-file datastore (see `src/models/database.js` and `data/database.json`).
