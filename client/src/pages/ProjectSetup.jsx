@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Save, Trash2, MapPin, Search, Building2 } from 'lucide-react'
 import { apiPost, apiPut, apiDelete } from '../lib/api'
@@ -15,6 +15,41 @@ const SOIL_TYPES = [
   { value: 'gravel', label: 'Gravel/Coarse (Group A)' },
 ]
 
+function useAddressSuggest(query) {
+  const [suggestions, setSuggestions] = useState([])
+  const [loading, setLoading] = useState(false)
+  const timerRef = useRef(null)
+
+  useEffect(() => {
+    if (!query || query.trim().length < 3) {
+      setSuggestions([])
+      return
+    }
+    // Debounce 400ms
+    clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(async () => {
+      setLoading(true)
+      try {
+        const res = await fetch(`/api/analysis/address-suggest?q=${encodeURIComponent(query.trim())}`)
+        const data = await res.json()
+        if (data.success && data.suggestions) {
+          setSuggestions(data.suggestions)
+        } else {
+          setSuggestions([])
+        }
+      } catch {
+        setSuggestions([])
+      } finally {
+        setLoading(false)
+      }
+    }, 400)
+
+    return () => clearTimeout(timerRef.current)
+  }, [query])
+
+  return { suggestions, loading }
+}
+
 export default function ProjectSetup({ currentProject, setCurrentProject, showNotification, navigate }) {
   const [form, setForm] = useState({
     name: '', address: '', latitude: '', longitude: '',
@@ -22,6 +57,23 @@ export default function ProjectSetup({ currentProject, setCurrentProject, showNo
     avg_annual_rainfall_in: '', climate_zone: '', notes: ''
   })
   const [saving, setSaving] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const addressRef = useRef(null)
+  const suggestionsRef = useRef(null)
+
+  const { suggestions, loading: suggestLoading } = useAddressSuggest(showSuggestions ? form.address : '')
+
+  // Close suggestions on outside click
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(e.target) &&
+          addressRef.current && !addressRef.current.contains(e.target)) {
+        setShowSuggestions(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   useEffect(() => {
     if (currentProject) {
@@ -40,7 +92,21 @@ export default function ProjectSetup({ currentProject, setCurrentProject, showNo
   }, [currentProject])
 
   const handleChange = (e) => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    setForm(prev => ({ ...prev, [name]: value }))
+    if (name === 'address') setShowSuggestions(true)
+  }
+
+  const handleSelectSuggestion = (suggestion) => {
+    setForm(prev => ({
+      ...prev,
+      address: suggestion.display_name,
+      latitude: suggestion.lat?.toFixed(6) || prev.latitude,
+      longitude: suggestion.lon?.toFixed(6) || prev.longitude,
+      property_area_sqft: suggestion.approx_area_sqft || prev.property_area_sqft,
+    }))
+    setShowSuggestions(false)
+    showNotification('Address filled from suggestion!', 'success')
   }
 
   const handleSave = async (e) => {
@@ -151,15 +217,37 @@ export default function ProjectSetup({ currentProject, setCurrentProject, showNo
             <div>
               <label className="block text-sm font-medium text-slate-600 mb-1">Property Address</label>
               <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                  name="address" value={form.address} onChange={handleChange}
-                  placeholder="123 Main St, City, State ZIP"
-                  className="input-field flex-1"
-                />
+                <div className="relative flex-1">
+                  <input
+                    ref={addressRef}
+                    name="address" value={form.address} onChange={handleChange}
+                    onFocus={() => form.address.trim().length >= 3 && setShowSuggestions(true)}
+                    placeholder="123 Main St, City, State ZIP"
+                    className="input-field w-full"
+                    autoComplete="off"
+                  />
+                  {showSuggestions && (suggestions.length > 0 || suggestLoading) && (
+                    <div ref={suggestionsRef} className="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                      {suggestLoading && <div className="px-4 py-2 text-sm text-slate-500">Searching...</div>}
+                      {suggestions.map((s, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => handleSelectSuggestion(s)}
+                          className="w-full text-left px-4 py-2 text-sm hover:bg-brand-50 hover:text-brand-700 border-b border-slate-100 last:border-b-0 transition-colors"
+                        >
+                          <span className="font-medium">{s.display_name.split(',')[0]}</span>
+                          <span className="text-slate-500 ml-1">{s.display_name.split(',').slice(1).join(',')}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <button type="button" onClick={handleAutofill} className="btn-outline flex items-center gap-2 whitespace-nowrap">
                   <Search size={16} /> Auto-fill
                 </button>
               </div>
+              <p className="text-xs text-slate-400 mt-1">Start typing for suggestions, or click Auto-fill to look up the full address</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
