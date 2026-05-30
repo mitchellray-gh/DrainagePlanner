@@ -12,9 +12,11 @@ let generator = null;
 let modelLoading = false;
 let modelReady = false;
 let loadError = null;
+let lastLoadAttemptAt = 0;
 
 // Model configuration
 const MODEL_ID = 'HuggingFaceTB/SmolLM2-135M-Instruct';
+const RETRY_COOLDOWN_MS = 30 * 1000;
 
 /**
  * Initialize the model (async, called on first use or startup)
@@ -22,6 +24,7 @@ const MODEL_ID = 'HuggingFaceTB/SmolLM2-135M-Instruct';
 async function initModel() {
   if (modelReady || modelLoading) return;
   modelLoading = true;
+  lastLoadAttemptAt = Date.now();
   loadError = null;
 
   try {
@@ -51,6 +54,12 @@ async function initModel() {
  * Generate a response using the local model + knowledge base
  */
 async function generateResponse(userMessage, history = []) {
+  if (!modelReady && !modelLoading && Date.now() - lastLoadAttemptAt >= RETRY_COOLDOWN_MS) {
+    initModel().catch(err => {
+      console.error('[LocalLLM] Retry init failed:', err && err.message ? err.message : err);
+    });
+  }
+
   // Find relevant knowledge for context
   const relevantKnowledge = KnowledgeBase.findRelevantKnowledge(userMessage, 2);
   const systemContext = KnowledgeBase.getSystemContext();

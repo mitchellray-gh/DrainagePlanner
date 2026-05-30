@@ -30,6 +30,10 @@ export default function App() {
   const [currentPlan, setCurrentPlan] = useState(null)
   const [toasts, setToasts] = useState([])
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [hasSubmittedProject, setHasSubmittedProject] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.localStorage.getItem('drainageplanner_project_submitted') === 'true'
+  })
   const ai = useDrainageAI()
 
   const showNotification = useCallback((message, type = 'info') => {
@@ -44,7 +48,17 @@ export default function App() {
   }, [])
 
   const renderPanel = () => {
-    const props = { currentProject, setCurrentProject, currentPlan, setCurrentPlan, showNotification, navigate, ai }
+    const props = {
+      currentProject,
+      setCurrentProject,
+      currentPlan,
+      setCurrentPlan,
+      showNotification,
+      navigate,
+      ai,
+      hasSubmittedProject,
+      setHasSubmittedProject
+    }
     switch (activePanel) {
       case 'dashboard': return <Dashboard {...props} />
       case 'project': return <ProjectSetup {...props} />
@@ -101,7 +115,7 @@ export default function App() {
       </main>
 
       {/* Chat Overlay */}
-      <ChatOverlay ai={ai} currentProject={currentProject} />
+      {hasSubmittedProject && <ChatOverlay ai={ai} currentProject={currentProject} />}
 
       {/* Toasts */}
       <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-2">

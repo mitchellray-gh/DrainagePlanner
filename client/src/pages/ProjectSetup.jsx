@@ -50,7 +50,7 @@ function useAddressSuggest(query) {
   return { suggestions, loading }
 }
 
-export default function ProjectSetup({ currentProject, setCurrentProject, showNotification, navigate }) {
+export default function ProjectSetup({ currentProject, setCurrentProject, showNotification, navigate, setHasSubmittedProject }) {
   const [form, setForm] = useState({
     name: '', address: '', latitude: '', longitude: '',
     property_area_sqft: '', soil_type: 'unknown',
@@ -98,11 +98,13 @@ export default function ProjectSetup({ currentProject, setCurrentProject, showNo
   }
 
   const handleSelectSuggestion = (suggestion) => {
+    const lat = parseFloat(suggestion.lat)
+    const lon = parseFloat(suggestion.lon)
     setForm(prev => ({
       ...prev,
       address: suggestion.display_name,
-      latitude: suggestion.lat?.toFixed(6) || prev.latitude,
-      longitude: suggestion.lon?.toFixed(6) || prev.longitude,
+      latitude: Number.isFinite(lat) ? lat.toFixed(6) : prev.latitude,
+      longitude: Number.isFinite(lon) ? lon.toFixed(6) : prev.longitude,
       property_area_sqft: suggestion.approx_area_sqft || prev.property_area_sqft,
     }))
     setShowSuggestions(false)
@@ -131,6 +133,8 @@ export default function ProjectSetup({ currentProject, setCurrentProject, showNo
       }
       if (data.success) {
         setCurrentProject({ ...currentProject, ...data.project })
+        setHasSubmittedProject(true)
+        localStorage.setItem('drainageplanner_project_submitted', 'true')
         showNotification('Project saved!', 'success')
       } else {
         showNotification('Error: ' + (data.error || 'Unknown'), 'error')
@@ -162,15 +166,29 @@ export default function ProjectSetup({ currentProject, setCurrentProject, showNo
     if (!form.address.trim()) return showNotification('Enter an address first', 'warning')
     showNotification('Looking up address...', 'info')
     try {
-      const res = await fetch(`/api/analysis/geocode?address=${encodeURIComponent(form.address)}`)
-      const data = await res.json()
-      if (data.success && data.result) {
+      let result = null
+
+      const geocodeRes = await fetch(`/api/analysis/geocode?address=${encodeURIComponent(form.address)}`)
+      const geocodeData = await geocodeRes.json()
+      if (geocodeData.success && geocodeData.result) {
+        result = geocodeData.result
+      } else {
+        const suggestRes = await fetch(`/api/analysis/address-suggest?q=${encodeURIComponent(form.address)}`)
+        const suggestData = await suggestRes.json()
+        if (suggestData.success && suggestData.suggestions?.length) {
+          result = suggestData.suggestions[0]
+        }
+      }
+
+      if (result) {
+        const lat = parseFloat(result.lat)
+        const lon = parseFloat(result.lon)
         setForm(prev => ({
           ...prev,
-          address: data.result.display_name || prev.address,
-          latitude: data.result.lat?.toFixed(6) || prev.latitude,
-          longitude: data.result.lon?.toFixed(6) || prev.longitude,
-          property_area_sqft: data.result.approx_area_sqft || prev.property_area_sqft,
+          address: result.display_name || prev.address,
+          latitude: Number.isFinite(lat) ? lat.toFixed(6) : prev.latitude,
+          longitude: Number.isFinite(lon) ? lon.toFixed(6) : prev.longitude,
+          property_area_sqft: result.approx_area_sqft || prev.property_area_sqft,
         }))
         showNotification('Address filled!', 'success')
       } else {

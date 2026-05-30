@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Plus, Camera, Ruler, Map as MapIcon, Calendar, Droplets } from 'lucide-react'
 import { apiGet } from '../lib/api'
 
-export default function Dashboard({ currentProject, setCurrentProject, setCurrentPlan, navigate, showNotification }) {
+export default function Dashboard({ currentProject, setCurrentProject, setCurrentPlan, navigate, showNotification, hasSubmittedProject, setHasSubmittedProject }) {
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -14,9 +14,17 @@ export default function Dashboard({ currentProject, setCurrentProject, setCurren
   const loadProjects = async () => {
     try {
       const data = await apiGet('/api/projects')
-      if (data.success) setProjects(data.projects)
+      if (data.success) {
+        setProjects(data.projects)
+        if (data.projects?.length > 0) {
+          setHasSubmittedProject(true)
+          localStorage.setItem('drainageplanner_project_submitted', 'true')
+        }
+      }
     } catch (err) {
-      showNotification('Error loading projects', 'error')
+      if (hasSubmittedProject) {
+        showNotification('Error loading projects', 'error')
+      }
     } finally {
       setLoading(false)
     }
