@@ -52,9 +52,8 @@ router.get('/parcel', async (req, res) => {
 
     // If address provided but no lat/lon, geocode with nominatim
     if ((!lat || !lon) && address) {
-      const geoUrl = process.env.GEOCODE_API_URL || 'https://nominatim.openstreetmap.org/search?q={q}&format=json&addressdetails=1&limit=1';
-      const apiUrl = geoUrl.replace('{q}', encodeURIComponent(address));
-      const gresp = await fetch(apiUrl, { headers: { 'User-Agent': 'DrainagePlanner/1.0' } });
+      const apiUrl = buildNominatimSearchUrl(address, 1);
+      const gresp = await fetch(apiUrl, { headers: NOMINATIM_HEADERS });
       const gbody = await gresp.json();
       if (!gbody || !gbody.length) return res.status(404).json({ success: false, error: 'Address not found' });
       lat = parseFloat(gbody[0].lat);
@@ -118,6 +117,57 @@ out body geom;`;
   }
 });
 
+// Nominatim helper — build a proper URL to avoid "string did not match expected pattern" errors
+function buildNominatimSearchUrl(query, limit = 1) {
+  const base = process.env.GEOCODE_API_URL || 'https://nominatim.openstreetmap.org/search';
+  const url = new URL(base);
+  url.searchParams.set('q', query);
+  url.searchParams.set('format', 'json');
+  url.searchParams.set('addressdetails', '1');
+  url.searchParams.set('limit', String(limit));
+  return url.toString();
+}
+
+const NOMINATIM_HEADERS = { 'User-Agent': 'DrainagePlanner/2.0 (+https://github.com/mitchellray-gh/DrainagePlanner)' };
+
+function bboxToApproxAreaSqft(bbox) {
+  if (!bbox || bbox.length < 4) return null;
+  const south = bbox[0], north = bbox[1], west = bbox[2], east = bbox[3];
+  const R = 6371000;
+  const toRad = v => v * Math.PI / 180;
+  const latDist = R * Math.abs(Math.sin(toRad(north)) - Math.sin(toRad(south)));
+  const lonDist = R * Math.cos(toRad((north + south) / 2)) * toRad(Math.abs(east - west));
+  const area_m2 = Math.abs(latDist * lonDist);
+  return +(area_m2 * 10.7639).toFixed(0);
+}
+
+// Address autocomplete/suggest endpoint using Nominatim
+router.get('/address-suggest', async (req, res) => {
+  try {
+    const q = req.query.q;
+    if (!q || q.trim().length < 3) return res.json({ success: true, suggestions: [] });
+
+    const url = buildNominatimSearchUrl(q.trim(), 5);
+    const resp = await fetch(url, { headers: NOMINATIM_HEADERS });
+    if (!resp.ok) return res.status(502).json({ success: false, error: 'Geocode service unavailable' });
+    const body = await resp.json();
+    if (!body || !body.length) return res.json({ success: true, suggestions: [] });
+
+    const suggestions = body.map(item => ({
+      display_name: item.display_name,
+      lat: parseFloat(item.lat),
+      lon: parseFloat(item.lon),
+      type: item.type,
+      boundingbox: item.boundingbox ? item.boundingbox.map(parseFloat) : null,
+      approx_area_sqft: bboxToApproxAreaSqft(item.boundingbox ? item.boundingbox.map(parseFloat) : null)
+    }));
+
+    res.json({ success: true, suggestions });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // Geocode address -> lat/lon (proxy). Uses Nominatim by default; override with GEOCODE_API_URL env var.
 router.get('/geocode', async (req, res) => {
   try {
@@ -130,8 +180,11 @@ router.get('/geocode', async (req, res) => {
       const zwsid = process.env.ZILLOW_ZWSID || req.query.zwsid;
       if (!zwsid) return res.status(400).json({ success: false, error: 'Zillow ZWSID required (set ZILLOW_ZWSID env var)' });
       const base = process.env.ZILLOW_API_URL || 'http://www.zillow.com/webservice/GetDeepSearchResults.htm';
-      const url = `${base}?zws-id=${encodeURIComponent(zwsid)}&address=${encodeURIComponent(address)}&citystatezip=`;
-      const resp = await fetch(url);
+      const zillowUrl = new URL(base);
+      zillowUrl.searchParams.set('zws-id', zwsid);
+      zillowUrl.searchParams.set('address', address);
+      zillowUrl.searchParams.set('citystatezip', '');
+      const resp = await fetch(zillowUrl.toString());
       const text = await resp.text();
 
       // Parse XML with xml2js for reliable extraction
@@ -189,8 +242,10 @@ router.get('/geocode', async (req, res) => {
     if (provider === 'google' || req.query.provider === 'google') {
       const key = process.env.GOOGLE_API_KEY || req.query.key;
       if (!key) return res.status(400).json({ success: false, error: 'Google API key required (set GOOGLE_API_KEY env var)' });
-      const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${encodeURIComponent(key)}`;
-      const resp = await fetch(apiUrl);
+      const googleUrl = new URL('https://maps.googleapis.com/maps/api/geocode/json');
+      googleUrl.searchParams.set('address', address);
+      googleUrl.searchParams.set('key', key);
+      const resp = await fetch(googleUrl.toString());
       if (!resp.ok) return res.status(502).json({ success: false, error: 'Google geocode error' });
       const body = await resp.json();
       if (!body || !body.results || !body.results.length) return res.json({ success: true, results: [] });
@@ -201,10 +256,7 @@ router.get('/geocode', async (req, res) => {
       if (best.geometry.viewport) {
         const ne = best.geometry.viewport.northeast;
         const sw = best.geometry.viewport.southwest;
-        const R = 6371000; const toRad = v=>v*Math.PI/180;
-        const latDist = R * Math.abs(Math.sin(toRad(ne.lat)) - Math.sin(toRad(sw.lat)));
-        const lonDist = R * Math.cos(toRad((ne.lat+sw.lat)/2)) * toRad(Math.abs(ne.lng - sw.lng));
-        approx_area_sqft = Math.round(Math.abs(latDist*lonDist)*10.7639);
+        approx_area_sqft = bboxToApproxAreaSqft([sw.lat, ne.lat, sw.lng, ne.lng]);
       }
       return res.json({ success: true, result: { display_name: best.formatted_address, lat, lon, approx_area_sqft, provider: 'google' } });
     }
@@ -213,8 +265,10 @@ router.get('/geocode', async (req, res) => {
     if (provider === 'mapbox' || req.query.provider === 'mapbox') {
       const key = process.env.MAPBOX_API_KEY || req.query.key;
       if (!key) return res.status(400).json({ success: false, error: 'Mapbox API key required (set MAPBOX_API_KEY env var)' });
-      const apiUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${encodeURIComponent(key)}&limit=1`;
-      const resp = await fetch(apiUrl);
+      const mapboxUrl = new URL(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json`);
+      mapboxUrl.searchParams.set('access_token', key);
+      mapboxUrl.searchParams.set('limit', '1');
+      const resp = await fetch(mapboxUrl.toString());
       if (!resp.ok) return res.status(502).json({ success: false, error: 'Mapbox geocode error' });
       const body = await resp.json();
       if (!body || !body.features || !body.features.length) return res.json({ success: true, results: [] });
@@ -223,45 +277,29 @@ router.get('/geocode', async (req, res) => {
       const lat = f.center && f.center[1];
       let approx_area_sqft = null;
       if (f.bbox && f.bbox.length === 4) {
-        const west = f.bbox[0], south = f.bbox[1], east = f.bbox[2], north = f.bbox[3];
-        const R = 6371000; const toRad = v=>v*Math.PI/180;
-        const latDist = R * Math.abs(Math.sin(toRad(north)) - Math.sin(toRad(south)));
-        const lonDist = R * Math.cos(toRad((north+south)/2)) * toRad(Math.abs(east - west));
-        approx_area_sqft = Math.round(Math.abs(latDist*lonDist)*10.7639);
+        approx_area_sqft = bboxToApproxAreaSqft([f.bbox[1], f.bbox[3], f.bbox[0], f.bbox[2]]);
       }
       return res.json({ success: true, result: { display_name: f.place_name, lat, lon, approx_area_sqft, provider: 'mapbox' } });
     }
 
-    const apiTemplate = process.env.GEOCODE_API_URL || 'https://nominatim.openstreetmap.org/search?q={q}&format=json&addressdetails=1&limit=1';
-    const apiUrl = apiTemplate.replace('{q}', encodeURIComponent(address));
-
-    const resp = await fetch(apiUrl, { headers: { 'User-Agent': 'DrainagePlanner/1.0 (+https://github.com/mitchellray-gh/DrainagePlanner)' } });
+    // Default: Nominatim (OpenStreetMap) — open source, no API key needed
+    const apiUrl = buildNominatimSearchUrl(address, 1);
+    const resp = await fetch(apiUrl, { headers: NOMINATIM_HEADERS });
     if (!resp.ok) return res.status(502).json({ success: false, error: 'Geocode service error' });
     const body = await resp.json();
     if (!body || !body.length) return res.json({ success: true, results: [] });
 
     const best = body[0];
-    // boundingbox is [south, north, west, east] in many responses (Nominatim gives [south, north, west, east] as strings)
     const bbox = best.boundingbox ? best.boundingbox.map(parseFloat) : null;
-    let approx_area_sqft = null;
-    if (bbox && bbox.length === 4) {
-      // bbox: [south, north, west, east]
-      const south = bbox[0], north = bbox[1], west = bbox[2], east = bbox[3];
-      // approximate distances in meters
-      const R = 6371000; // earth radius m
-      const toRad = v => v * Math.PI / 180;
-      const latDist = R * Math.abs(Math.sin(toRad(north)) - Math.sin(toRad(south))); // rough north-south
-      const lonDist = R * Math.cos(toRad((north + south) / 2)) * toRad(Math.abs(east - west));
-      const area_m2 = Math.abs(latDist * lonDist);
-      approx_area_sqft = +(area_m2 * 10.7639).toFixed(0);
-    }
+    const approx_area_sqft = bboxToApproxAreaSqft(bbox);
 
     res.json({ success: true, result: {
       display_name: best.display_name,
       lat: parseFloat(best.lat),
       lon: parseFloat(best.lon),
       boundingbox: bbox,
-      approx_area_sqft
+      approx_area_sqft,
+      provider: 'nominatim'
     }});
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
