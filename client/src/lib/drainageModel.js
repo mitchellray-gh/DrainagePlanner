@@ -2,7 +2,15 @@
  * DrainageModel — TensorFlow.js browser-based neural network
  * Trains on saved project data to recommend drainage elements
  */
-import * as tf from '@tensorflow/tfjs'
+
+// TensorFlow.js is loaded lazily (dynamic import) so it builds into its own chunk and
+// stays off the initial bundle / critical path. ensureTf() caches the module; every
+// synchronous use (createModel/predict) is reached only after an async path awaited it.
+let tf = null
+async function ensureTf() {
+  if (!tf) tf = await import('@tensorflow/tfjs')
+  return tf
+}
 
 const MODEL_KEY = 'indexeddb://drainage-recommendation-model'
 const FEATURE_COUNT = 20
@@ -74,6 +82,7 @@ async function trainModel(samples, onProgress = null) {
     throw new Error('No training data available')
   }
 
+  await ensureTf()
   const model = createModel()
 
   const xs = tf.tensor2d(samples.map(s => s.features), [samples.length, FEATURE_COUNT])
@@ -120,6 +129,7 @@ async function saveModel(model) {
  */
 async function loadModel() {
   try {
+    await ensureTf()
     const model = await tf.loadLayersModel(MODEL_KEY)
     model.compile({
       optimizer: tf.train.adam(0.001),
@@ -137,6 +147,7 @@ async function loadModel() {
  */
 async function hasStoredModel() {
   try {
+    await ensureTf()
     const models = await tf.io.listModels()
     return MODEL_KEY in models
   } catch (e) {
@@ -149,6 +160,7 @@ async function hasStoredModel() {
  */
 async function deleteStoredModel() {
   try {
+    await ensureTf()
     await tf.io.removeModel(MODEL_KEY)
   } catch (e) {
     // Model may not exist

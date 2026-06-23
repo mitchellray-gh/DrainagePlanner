@@ -70,11 +70,21 @@ function loadDb() {
   return db;
 }
 
+// Write atomically: serialize to a temp file in the same directory, then rename
+// over the target. rename() is atomic on a single filesystem, so a crash mid-write
+// can never leave a truncated/corrupt database.json behind.
+function atomicWrite(file, data) {
+  const tmp = `${file}.${process.pid}.tmp`;
+  fs.writeFileSync(tmp, data, 'utf8');
+  fs.renameSync(tmp, file);
+}
+
 function saveDb() {
   if (readOnlyFS) return; // don't attempt to write when flagged read-only
+  const data = JSON.stringify(db, null, 2);
   try {
     if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR, { recursive: true });
-    fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2), 'utf8');
+    atomicWrite(DB_FILE, data);
   } catch (err) {
     // If write fails (e.g., EROFS on /var/task in serverless), attempt fallback to tmp dir once
     console.warn('Failed to write DB file to', DB_FILE, '-', err.message);
@@ -82,7 +92,7 @@ function saveDb() {
     try {
       if (!fs.existsSync(fallback)) fs.mkdirSync(fallback, { recursive: true });
       const fallbackFile = path.join(fallback, 'database.json');
-      fs.writeFileSync(fallbackFile, JSON.stringify(db, null, 2), 'utf8');
+      atomicWrite(fallbackFile, data);
       console.warn(`Wrote DB to fallback location: ${fallbackFile}`);
       // switch DB_FILE to fallback for subsequent writes
       DB_DIR = fallback;

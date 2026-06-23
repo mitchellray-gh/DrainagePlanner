@@ -18,6 +18,21 @@ export default defineConfig({
   },
   build: {
     outDir: '../public',
-    emptyOutDir: true
+    emptyOutDir: true,
+    chunkSizeWarningLimit: 2000,
+    rollupOptions: {
+      output: {
+        // Split large libraries into their own cacheable chunks. tfjs is also
+        // dynamically imported, so it only downloads when the AI panel is used.
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return
+          if (id.includes('@tensorflow')) return 'tfjs'
+          if (id.includes('leaflet')) return 'leaflet'
+          if (id.includes('framer-motion')) return 'framer'
+          if (id.includes('react')) return 'react-vendor'
+          return 'vendor'
+        }
+      }
+    }
   }
 })

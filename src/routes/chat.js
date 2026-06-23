@@ -28,8 +28,13 @@ const SYSTEM_PROMPT = [
   'Keep responses helpful, concise, and practical. If someone asks about something unrelated to outdoor/landscaping/drainage topics, politely redirect them back to your area of expertise. You can provide general advice but always recommend consulting local professionals for major projects.'
 ].join('\n');
 
-// Start loading the local model in the background
-localLLM.initModel();
+// Optionally load the local SmolLM2 model in the background. Off by default: the first
+// run downloads ~100MB of weights from HuggingFace, which fails on locked-down networks
+// and re-downloads on every serverless cold start. Set ENABLE_LOCAL_LLM=true to enable it;
+// otherwise chat uses the OpenAI path (if OPENAI_API_KEY is set) or the knowledge base.
+if (process.env.ENABLE_LOCAL_LLM === 'true') {
+  localLLM.initModel();
+}
 
 router.post('/', async (req, res) => {
   const { message, history } = req.body;

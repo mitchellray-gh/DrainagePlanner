@@ -1,17 +1,20 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, lazy, Suspense } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import Sidebar from './components/Sidebar'
-import Dashboard from './pages/Dashboard'
-import ProjectSetup from './pages/ProjectSetup'
-import Survey from './pages/Survey'
-import Photos from './pages/Photos'
-import Analysis from './pages/Analysis'
-import DrainagePlan from './pages/DrainagePlan'
-import Landscaping from './pages/Landscaping'
-import Report from './pages/Report'
 import ChatOverlay from './components/ChatOverlay'
 import Toast from './components/Toast'
 import useDrainageAI from './hooks/useDrainageAI'
+
+// Pages are code-split: each loads on demand, keeping heavy deps (leaflet maps,
+// the AI panel, etc.) out of the initial bundle for a faster first paint.
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const ProjectSetup = lazy(() => import('./pages/ProjectSetup'))
+const Survey = lazy(() => import('./pages/Survey'))
+const Photos = lazy(() => import('./pages/Photos'))
+const Analysis = lazy(() => import('./pages/Analysis'))
+const DrainagePlan = lazy(() => import('./pages/DrainagePlan'))
+const Landscaping = lazy(() => import('./pages/Landscaping'))
+const Report = lazy(() => import('./pages/Report'))
 
 const PANELS = [
   { id: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
@@ -23,6 +26,14 @@ const PANELS = [
   { id: 'landscape', label: 'Landscaping', icon: 'Leaf' },
   { id: 'report', label: 'Report', icon: 'FileText' },
 ]
+
+function PanelFallback() {
+  return (
+    <div className="flex items-center justify-center py-24">
+      <div className="w-8 h-8 border-2 border-brand-200 border-t-brand-600 rounded-full animate-spin" />
+    </div>
+  )
+}
 
 export default function App() {
   const [activePanel, setActivePanel] = useState('dashboard')
@@ -95,7 +106,9 @@ export default function App() {
 
         <div className="p-4 md:p-8 max-w-7xl mx-auto">
           <AnimatePresence mode="wait">
-            {renderPanel()}
+            <Suspense fallback={<PanelFallback />}>
+              {renderPanel()}
+            </Suspense>
           </AnimatePresence>
         </div>
       </main>

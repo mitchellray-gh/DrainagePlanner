@@ -8,33 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const db = require('../models/database');
-
-// Determine an uploads directory that is writable. Allow override via UPLOAD_DIR env var.
-const DEFAULT_UPLOAD_DIR = path.join(__dirname, '..', '..', 'uploads');
-const UPLOAD_DIR = process.env.UPLOAD_DIR || DEFAULT_UPLOAD_DIR;
-
-// Ensure upload dir exists and is writable. If not, fallback to os.tmpdir().
-const os = require('os');
-function ensureUploadDir(dir) {
-  try {
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.accessSync(dir, fs.constants.W_OK);
-    return dir;
-  } catch (err) {
-    const fallback = process.env.UPLOAD_FALLBACK_DIR || os.tmpdir();
-    try {
-      if (!fs.existsSync(fallback)) fs.mkdirSync(fallback, { recursive: true });
-      fs.accessSync(fallback, fs.constants.W_OK);
-      console.warn(`Upload directory ${dir} not writable; falling back to ${fallback}`);
-      return fallback;
-    } catch (err2) {
-      console.error('No writable upload directory available; uploads will fail');
-      return null;
-    }
-  }
-}
-
-const FINAL_UPLOAD_DIR = ensureUploadDir(UPLOAD_DIR) || ensureUploadDir(os.tmpdir());
+const { FINAL_UPLOAD_DIR, REPO_UPLOADS_DIR, removePhotoFile } = require('../lib/photoStorage');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -82,8 +56,7 @@ router.post('/upload/:projectId', upload.array('photos', 50), (req, res) => {
       // Decide what URL to expose for the stored file. If the FINAL_UPLOAD_DIR is the repo's ./uploads
       // directory (the same one mounted by server static middleware), expose via /uploads/<filename>.
       // Otherwise expose via an API file route we provide below.
-      const repoUploadsDir = path.join(__dirname, '..', '..', 'uploads');
-      const exposedPath = (FINAL_UPLOAD_DIR && path.resolve(FINAL_UPLOAD_DIR) === path.resolve(repoUploadsDir))
+      const exposedPath = (FINAL_UPLOAD_DIR && path.resolve(FINAL_UPLOAD_DIR) === path.resolve(REPO_UPLOADS_DIR))
         ? `/uploads/${file.filename}`
         : `/api/photos/file/${file.filename}`;
 
@@ -150,8 +123,7 @@ router.delete('/:id', (req, res) => {
   try {
     const photo = db.findById('photos', req.params.id);
     if (photo) {
-      const fullPath = path.join(__dirname, '..', '..', photo.filepath);
-      if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
+      removePhotoFile(photo);
       db.removeById('photos', req.params.id);
     }
     res.json({ success: true });
